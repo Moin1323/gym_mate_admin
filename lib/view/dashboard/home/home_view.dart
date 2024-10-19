@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gym_mate_admin/repository/user_repository/user_repository.dart';
-
+import 'package:gym_mate_admin/view/dashboard/home/Notifications/notifications_view.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '../../../res/colors/app_colors.dart';
@@ -87,7 +87,9 @@ class _HomeViewState extends State<HomeView> {
                     }),
                     const Spacer(),
                     GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        Get.to(Notifications_view());
+                      },
                       child: const CircleAvatar(
                         radius: 25,
                         backgroundColor: Colors.white24,
