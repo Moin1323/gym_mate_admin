@@ -31,9 +31,7 @@ class _HomeViewState extends State<HomeView> {
     notificationServices.initLocalNotifications(
         context, const RemoteMessage()); // Initialize local notifications
     notificationServices.firebaseInit();
-    notificationServices.getDeviceToken().then((value) {
-      print('Device token: $value');
-    });
+    notificationServices.getDeviceToken();
   }
 
   @override

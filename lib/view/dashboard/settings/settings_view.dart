@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gym_mate_admin/res/colors/app_colors.dart';
 
+import '../../auth/login/login_view.dart';
 import 'widgets/AccountTile.dart'; // Ensure this file exists in your project
 
 class SettingsView extends StatefulWidget {
@@ -19,6 +20,7 @@ class _SettingsViewState extends State<SettingsView> {
       statusBarIconBrightness: Brightness.light,
       statusBarColor: AppColors.background,
     ));
+
     return Scaffold(
       backgroundColor: AppColors.background,
       body: Stack(
@@ -83,46 +85,51 @@ class _SettingsViewState extends State<SettingsView> {
                   Get.height * 0.52, // Approximately 65% of the screen height
               child: ListView(
                 padding: EdgeInsets.zero,
-                children: const [
-                  AccountTile(
+                children: [
+                  const AccountTile(
                     accountName: 'Edit Profile',
                     leadingIcon: Icons.account_circle,
                     trailingIcon: Icons.chevron_right,
                   ),
-                  AccountTile(
+                  const AccountTile(
                     accountName: 'Password Change',
                     leadingIcon: Icons.lock_clock,
                     trailingIcon: Icons.chevron_right,
                   ),
-                  AccountTile(
+                  const AccountTile(
                     accountName: 'Subscription',
                     leadingIcon: Icons.subscriptions_rounded,
                     trailingIcon: Icons.chevron_right,
                   ),
-                  AccountTile(
+                  const AccountTile(
                     accountName: 'Saved Items',
                     leadingIcon: Icons.favorite,
                     trailingIcon: Icons.chevron_right,
                   ),
-                  AccountTile(
+                  const AccountTile(
                     accountName: 'Notifications',
                     leadingIcon: Icons.notifications,
                     showSwitch: true, // Show CupertinoSwitch for Notifications
                   ),
-                  AccountTile(
+                  const AccountTile(
                     accountName: 'Theme',
                     leadingIcon: Icons.color_lens_outlined,
                     showSwitch: true,
                   ),
-                  AccountTile(
+                  const AccountTile(
                     accountName: 'Privary & Security',
                     leadingIcon: Icons.privacy_tip,
                     trailingIcon: Icons.chevron_right,
                   ),
-                  AccountTile(
+                  const AccountTile(
                     accountName: 'Complains & Help',
                     leadingIcon: Icons.help,
                     trailingIcon: Icons.chevron_right,
+                  ),
+                  AccountTile(
+                    accountName: 'Log out',
+                    leadingIcon: Icons.logout,
+                    destinationScreen: LoginView(),
                   ),
                   // Add more AccountTiles as needed
                 ],

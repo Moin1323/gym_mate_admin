@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:gym_mate_admin/services/get_services.dart';
+import 'package:gym_mate_admin/services/send_notification.dart';
 
 import '../../../../res/colors/app_colors.dart';
 
@@ -93,7 +95,61 @@ class _Notifications_viewState extends State<Notifications_view> {
                     ),
                   ),
                 ),
-              )
+              ),
+              const SizedBox(
+                height: 25,
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor:
+                      AppColors.primary, // Background color of the button
+                  padding: EdgeInsets.symmetric(
+                      horizontal: 20, vertical: 10), // Adjust padding if needed
+                ),
+                onPressed: () async {
+                  GetServerKey getServerkey = GetServerKey();
+                  String acessToken = await getServerkey.getServerKeyToken();
+                  print(acessToken);
+                },
+                child: Text(
+                  'Gen Api Token',
+                  style: TextStyle(
+                    color: Colors.white, // Text color
+                    fontSize: 16, // Text size
+                    fontWeight: FontWeight.bold, // Text style (optional)
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 25,
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor:
+                      AppColors.primary, // Background color of the button
+                  padding: EdgeInsets.symmetric(
+                      horizontal: 20, vertical: 10), // Adjust padding if needed
+                ),
+                onPressed: () async {
+                  await SendNotificationService.sendNotificationUsingApi(
+                    token:
+                        "cF2tFbDPS3qYtmtv16sVb8:APA91bGB3I0XiaDoeGYpxZytpRpq4zNJ3lggX73M9q58iHCuVMzrbwlNO2YByIL-TuyrpTQb4OpP6JLDUGCsjrXz7lmF5PGGJnA-uGmsZWlYnTSPNNzAPaP8YIOh1YXVUcUy3ovJhBey",
+                    title: "Notification Title",
+                    body: "Notifiction Body",
+                    data: {
+                      "screen": "cart",
+                    },
+                  );
+                },
+                child: Text(
+                  'Send Fee Nf🔔',
+                  style: TextStyle(
+                    color: Colors.white, // Text color
+                    fontSize: 16, // Text size
+                    fontWeight: FontWeight.bold, // Text style (optional)
+                  ),
+                ),
+              ),
             ],
           ),
         ));
