@@ -15,15 +15,15 @@ class TabBarWidget extends StatelessWidget {
       tabs: const [
         TabrComponent(
           label: 'Users',
-          imageAsset: 'lib/assets/images/cardio2.png',
+          icon: Icons.account_circle,
         ),
         TabrComponent(
           label: 'Gear',
-          imageAsset: 'lib/assets/images/dumbbell.png',
+          icon: Icons.fitness_center,
         ),
         TabrComponent(
           label: 'Fitness',
-          imageAsset: 'lib/assets/images/boxing.png',
+          icon: Icons.directions_bike,
         ),
       ],
     );

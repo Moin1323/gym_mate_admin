@@ -19,7 +19,7 @@ class EquipmentService {
     }
   }
 
-  // New method to fetch all equipments
+  // TO FETCH DATA
   Future<List<Equipment>> fetchAllEquipments() async {
     List<Equipment> equipmentList = [];
 
@@ -27,11 +27,20 @@ class EquipmentService {
       // Fetch all equipments from Firestore
       QuerySnapshot snapshot = await _firestore.collection("Equipments").get();
 
-      // Loop through the documents and add them to the equipment list
+      // Loop through the documents and create Equipment objects
       for (var doc in snapshot.docs) {
         Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-        Equipment equipment =
-            Equipment.fromJson(data); // Make sure you have a fromJson method
+
+        Equipment equipment = Equipment(
+          name: data['name'],
+          description: data['description'],
+          category: data['category'],
+          imageUrl: data['imageUrl'],
+          availableSizes: data['availableSizes'] != null
+              ? List<String>.from(data['availableSizes'])
+              : null,
+        );
+
         equipmentList.add(equipment);
       }
     } catch (e) {
