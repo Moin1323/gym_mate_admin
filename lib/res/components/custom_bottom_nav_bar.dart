@@ -18,7 +18,7 @@ class CustomBottomNavBar extends StatelessWidget {
       currentIndex: currentIndex,
       onTap: onTap,
       iconSize: 30,
-      items: const [
+      items: [
         BottomNavigationBarItem(
           icon: Icon(
             Icons.home,

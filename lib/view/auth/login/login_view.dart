@@ -45,7 +45,7 @@ class _LoginViewState extends State<LoginView> {
                   children: [
                     const SizedBox(height: 200),
                     // Title: Login
-                    const Align(
+                    Align(
                       alignment: Alignment.centerLeft,
                       child: Text("Login",
                           style: TextStyle(
@@ -94,7 +94,7 @@ class _LoginViewState extends State<LoginView> {
                     ),
                     const SizedBox(height: 10),
                     // Forgot Password
-                    const Align(
+                    Align(
                       alignment: Alignment.centerRight,
                       child: Text(
                         "Forgot your password?",
@@ -122,7 +122,7 @@ class _LoginViewState extends State<LoginView> {
                         return loginVM.loading.value
                             ? const CircularProgressIndicator(
                                 color: Colors.white)
-                            : const Text(
+                            : Text(
                                 'Login',
                                 style: TextStyle(
                                     color: AppColors.background, fontSize: 20),
@@ -134,8 +134,8 @@ class _LoginViewState extends State<LoginView> {
                     RichText(
                       text: TextSpan(
                         text: "Don't have an account? ",
-                        style: const TextStyle(
-                            color: AppColors.secondary, fontSize: 16),
+                        style:
+                            TextStyle(color: AppColors.secondary, fontSize: 16),
                         children: [
                           TextSpan(
                             text: "Signup",

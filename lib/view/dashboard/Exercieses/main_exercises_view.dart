@@ -115,7 +115,7 @@ class MainExercisesView extends StatelessWidget {
                                         Get.to(() =>
                                             ExerciseDetail(exercise: exercise));
                                       },
-                                      child: const Text(
+                                      child: Text(
                                         "TRY",
                                         style: TextStyle(
                                           color: AppColors.background,

@@ -2,15 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gym_mate_admin/models/exercise/exercise.dart';
 import 'package:gym_mate_admin/models/exercise/instruction.dart';
 
-// TO FETCH DATA
 class ExerciseService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<Map<String, List<Exercise>>> fetchAllExercises() async {
+    // Ensure the keys match the case used in your Firestore data
     Map<String, List<Exercise>> categorizedExercises = {
-      "boxing": [],
-      "gym": [], // Changed "strength" to "gym"
-      "cardio": [],
+      "Boxing": [], // Match casing
+      "Gym": [], // Match casing
+      "Cardio": [], // Match casing
     };
 
     try {
@@ -29,7 +29,7 @@ class ExerciseService {
 
         Exercise exercise = Exercise(
           name: data['name'],
-          category: data['category'],
+          category: data['category'], // Ensure category is correctly populated
           muscleGroup: data['muscleGroup'],
           equipment: data['equipment'],
           animationUrl: data['animationUrl'],

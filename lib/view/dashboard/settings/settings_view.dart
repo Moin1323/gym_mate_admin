@@ -15,7 +15,7 @@ class SettingsView extends StatefulWidget {
 class _SettingsViewState extends State<SettingsView> {
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarIconBrightness: Brightness.light,
       statusBarColor: AppColors.background,
     ));
@@ -46,7 +46,7 @@ class _SettingsViewState extends State<SettingsView> {
                   ),
                 ),
                 SizedBox(height: Get.height * 0.002),
-                const Text(
+                Text(
                   'Josh Dor',
                   style: TextStyle(
                       fontSize: 22,

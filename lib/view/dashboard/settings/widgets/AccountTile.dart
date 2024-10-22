@@ -69,7 +69,7 @@ class AccountTile extends StatelessWidget {
                 Expanded(
                   child: Text(
                     accountName,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: AppColors.secondary,
                       fontSize: 18,
                       fontWeight: FontWeight.w900,

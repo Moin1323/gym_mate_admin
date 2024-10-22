@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gym_mate_admin/repository/user_repository/user_repository.dart';
-import 'package:gym_mate_admin/view/dashboard/home/Notifications/notifications_view.dart';
-import 'package:iconsax/iconsax.dart';
+import 'package:gym_mate_admin/view/dashboard/home/widgets/banner_widget.dart';
+import 'package:gym_mate_admin/view/dashboard/home/widgets/header_widget.dart';
+import 'package:gym_mate_admin/view/dashboard/home/widgets/tab_bar_view_widget.dart';
+import 'package:gym_mate_admin/view/dashboard/home/widgets/tab_bar_widget.dart';
 
 import '../../../res/colors/app_colors.dart';
 import '../../../services/notifications_service.dart';
-import 'widgets/exercise_component.dart';
-import 'widgets/tb_component.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -26,6 +26,7 @@ class _HomeViewState extends State<HomeView> {
   void initState() {
     super.initState();
     userController.fetchUserData();
+    userController.fetchAllUsers();
     userController.fetchAllExercises();
     notificationServices.requestNotificationPermission();
     notificationServices.initLocalNotifications(
@@ -38,163 +39,25 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarIconBrightness: Brightness.light,
       statusBarColor: AppColors.background,
     ));
     return DefaultTabController(
       length: 3, // Number of tabs
       child: Scaffold(
-        backgroundColor: const Color(0xFF000000),
+        backgroundColor: AppColors.background,
         body: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Column(
             children: [
-              SizedBox(height: Get.height * 0.020),
-              // Header Section
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Row(
-                  children: [
-                    Obx(() {
-                      if (userController.isLoading.value) {
-                        return const Center(child: CircularProgressIndicator());
-                      } else {
-                        String userName =
-                            userController.user.value.name ?? 'User';
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Hello, $userName 💪🏻',
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.grey,
-                              ),
-                            ),
-                            const Text(
-                              'This Is Gym Mate',
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ],
-                        );
-                      }
-                    }),
-                    const Spacer(),
-                    GestureDetector(
-                      onTap: () {
-                        Get.to(Notifications_view());
-                      },
-                      child: const CircleAvatar(
-                        radius: 25,
-                        backgroundColor: Colors.white24,
-                        child: Icon(
-                          Iconsax.notification,
-                          size: 20,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: Get.height * 0.01),
-              // Banner/Info Section
-              Container(
-                height: Get.height * 0.14,
-                width: Get.width * 0.9,
-                decoration: BoxDecoration(
-                  color: AppColors.primary,
-                  borderRadius: BorderRadius.circular(15),
-                ),
-              ),
-              SizedBox(height: Get.height * 0.025),
-              // TabBar Section
-              const TabBar(
-                labelPadding: EdgeInsets.symmetric(horizontal: 5),
-                indicatorPadding: EdgeInsets.symmetric(horizontal: 20),
-                dividerColor: Colors.transparent,
-                indicatorColor: AppColors.primary,
-                tabs: [
-                  // First Tab with Image and Text
-                  TabrComponent(
-                    label: 'Cardio',
-                    imageAsset: 'lib/assets/images/cardio2.png',
-                  ),
-                  // Second Tab with Image and Text
-                  TabrComponent(
-                    label: 'Gym',
-                    imageAsset: 'lib/assets/images/dumbbell.png',
-                  ),
-                  // Third Tab with Image and Text
-                  TabrComponent(
-                    label: 'Boxing',
-                    imageAsset: 'lib/assets/images/boxing.png',
-                  ),
-                ],
-              ),
-              Expanded(
-                child: Obx(() {
-                  // Check if exercises are loaded
-                  if (userController.isLoading.value) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else {
-                    return TabBarView(
-                      children: [
-                        PopularTrainings(
-                          trainings: userController.exercises['cardio'] ?? [],
-                          isLoading: userController.isLoading.value,
-                          title: 'Cardio',
-                        ),
-                        PopularTrainings(
-                          trainings: userController.exercises['gym'] ?? [],
-                          isLoading: userController.isLoading.value,
-                          title: "Gym",
-                        ),
-                        PopularTrainings(
-                          trainings: userController.exercises['boxing'] ?? [],
-                          isLoading: userController.isLoading.value,
-                          title: "Boxing",
-                        ),
-                      ],
-                    );
-                  }
-                }),
-              ),
-              Column(
-                children: [
-                  Row(
-                    children: [
-                      const Text(
-                        "Best Programs 🔥",
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
-                      ),
-                      const Spacer(),
-                      TextButton(
-                        onPressed: () {},
-                        child: const Text(
-                          'See all',
-                          style: TextStyle(
-                              color: Colors.blue, fontWeight: FontWeight.bold),
-                        ),
-                      )
-                    ],
-                  ),
-                ],
-              ),
-              Container(
-                height: Get.height * 0.1,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  color: const Color(0xFF191919),
-                ),
-              ),
+              const SizedBox(height: 10),
+              HeaderWidget(userController: userController),
+              const SizedBox(height: 10),
+              const BannerWidget(),
+              const SizedBox(height: 20),
+              const TabBarWidget(),
+              TabBarViewWidget(userController: userController),
             ],
           ),
         ),
