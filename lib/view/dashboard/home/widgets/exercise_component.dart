@@ -10,42 +10,50 @@ import 'package:gym_mate_admin/view/dashboard/Exercieses/main_exercises_view.dar
 
 class PopularTrainings extends StatelessWidget {
   final UserController userController = Get.put(UserController());
-  final List<Exercise> trainings;
+  final List<Exercise> cardio; // Cardio exercises list
+  final List<Exercise> gym; // Gym exercises list
+  final List<Exercise> boxing; // Boxing exercises list
   final String title;
   final bool isLoading;
 
   PopularTrainings({
     super.key,
-    required this.trainings,
+    required this.cardio,
+    required this.gym,
+    required this.boxing,
     required this.isLoading,
     required this.title,
   });
 
   @override
   Widget build(BuildContext context) {
+    // Combine the three lists into a single list
+    List<Exercise> combinedTrainings = [
+      ...cardio,
+      ...gym,
+      ...boxing,
+    ];
+
     return Column(
       children: [
         SizedBox(height: Get.height * 0.01),
         Row(
           children: [
             Text(
-              "Most Recent 🔥",
+              "Exercises 🔥",
               style: TextStyle(
-                  color: AppColors.secondary,
-                  fontWeight:
-                      FontWeight.bold), // Changed to AppColors.secondary
+                  color: AppColors.secondary, fontWeight: FontWeight.bold),
             ),
             const Spacer(),
             TextButton(
               onPressed: () {
-                Get.to(() =>
-                    MainExercisesView(title: title, exercises: trainings));
+                Get.to(() => MainExercisesView(
+                    title: title, exercises: combinedTrainings));
               },
               child: const Text(
-                ' Edit',
-                style: TextStyle(
-                    color: Colors.blue,
-                    fontWeight: FontWeight.bold), // Keeping blue for button
+                'Edit',
+                style:
+                    TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
               ),
             ),
           ],
@@ -54,18 +62,18 @@ class PopularTrainings extends StatelessWidget {
         isLoading
             ? const Center(
                 child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                      Colors.blue), // Keeping blue for loading indicator
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
                 ),
               )
             : Container(
-                height: Get.height * 0.45,
+                height:
+                    Get.height * 0.45, // Set a fixed height for scrollable area
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15),
                 ),
                 child: SingleChildScrollView(
                   child: Column(
-                    children: trainings.map((training) {
+                    children: combinedTrainings.map((training) {
                       return Padding(
                         padding: EdgeInsets.only(bottom: Get.height * 0.02),
                         child: _buildTrainingCard(training),
@@ -81,49 +89,54 @@ class PopularTrainings extends StatelessWidget {
   Widget _buildTrainingCard(Exercise training) {
     return GestureDetector(
       onTap: () {
+        // Navigate to ExerciseDetail screen
         Get.to(() => ExerciseDetail(exercise: training));
       },
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 10.0),
         padding: const EdgeInsets.all(10.0),
         decoration: BoxDecoration(
-          color:
-              AppColors.secondary.withOpacity(0.25), // Changed background color
+          color: AppColors.secondary.withOpacity(0.25), // Background color
           borderRadius: BorderRadius.circular(15),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            CircleAvatar(
-              radius: 30,
-              backgroundColor: AppColors.primary, // Using AppColors.primary
-              backgroundImage: NetworkImage(
+            ClipRRect(
+              borderRadius: BorderRadius.circular(15),
+              child: Image.network(
                 training.animationUrl,
+                width: 60, // Fixed width for image
+                height: 60, // Fixed height for image
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return const Center(child: Text('Image not available'));
+                },
               ),
-              onBackgroundImageError: (_, __) =>
-                  const Icon(Icons.error, color: Colors.red),
             ),
             SizedBox(width: Get.width * 0.04),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  training.name,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16),
-                ),
-                const SizedBox(height: 5),
-                Text(
-                  training.category,
-                  style: const TextStyle(
-                      color: Colors.white70,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14),
-                ),
-              ],
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    training.name,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16),
+                  ),
+                  const SizedBox(height: 5),
+                  Text(
+                    training.category,
+                    style: const TextStyle(
+                        color: Colors.white70,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -163,7 +176,7 @@ class UserDetailsTab extends StatelessWidget {
                 // Add your navigation to view all users
               },
               child: const Text(
-                'View All',
+                'Edit',
                 style: TextStyle(
                     color: Colors.blue,
                     fontWeight: FontWeight.bold), // Keeping blue for button
@@ -210,16 +223,27 @@ class UserDetailsTab extends StatelessWidget {
         decoration: BoxDecoration(
           color:
               AppColors.secondary.withOpacity(0.25), // Changed background color
-          borderRadius: BorderRadius.circular(15),
+          borderRadius:
+              BorderRadius.circular(15), // Border radius for the whole card
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            CircleAvatar(
-                radius: 30,
-                backgroundColor: AppColors.primary, // Using AppColors.primary
+            Container(
+              width: 60, // Set a width for the icon container
+              height: 60, // Set a height for the icon container
+              decoration: BoxDecoration(
+                color: AppColors.primary,
+                borderRadius:
+                    BorderRadius.circular(15), // Match border radius with card
+              ),
+              child: ClipRRect(
+                borderRadius:
+                    BorderRadius.circular(15), // Match border radius with card
                 child: Icon(Icons.person,
-                    color: AppColors.background)), // Default icon
+                    color: AppColors.background), // Default icon
+              ),
+            ),
             SizedBox(width: Get.width * 0.04),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -268,7 +292,7 @@ class EquipmentTab extends StatelessWidget {
         Row(
           children: [
             Text(
-              "Most Recent 🔥",
+              "Equipments 🏋️‍♂️",
               style: TextStyle(
                   color: AppColors.secondary,
                   fontWeight:
@@ -280,7 +304,7 @@ class EquipmentTab extends StatelessWidget {
                 // Get.to(() => EquipmentDetailView(equipments: equipments));
               },
               child: const Text(
-                'View All',
+                'Edit',
                 style: TextStyle(
                     color: Colors.blue,
                     fontWeight: FontWeight.bold), // Keeping blue for button
@@ -297,7 +321,7 @@ class EquipmentTab extends StatelessWidget {
                 ),
               )
             : Container(
-                height: Get.height * 0.45,
+                height: Get.height * 0.45, // Set height for scrollable area
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15),
                 ),
@@ -332,33 +356,47 @@ class EquipmentTab extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            CircleAvatar(
-              radius: 30,
-              backgroundColor: AppColors.primary, // Using AppColors.primary
-              child: Icon(Icons.fitness_center,
-                  color: AppColors.background), // Default icon
+            ClipRRect(
+              borderRadius: BorderRadius.circular(15),
+              child: Image.network(
+                equipment.imageUrl,
+                fit: BoxFit.cover,
+                width: 60, // Fixed width for image
+                height: 60, // Fixed height for image
+                errorBuilder: (context, error, stackTrace) {
+                  return const Center(
+                    child: Icon(
+                      Icons.fitness_center, // Use a fitness-related icon
+                      size: 30,
+                      color: Colors.white,
+                    ),
+                  );
+                },
+              ),
             ),
             SizedBox(width: Get.width * 0.04),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  equipment.name,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16),
-                ),
-                const SizedBox(height: 5),
-                Text(
-                  equipment.category,
-                  style: const TextStyle(
-                      color: Colors.white70,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14),
-                ),
-              ],
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    equipment.name,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16),
+                  ),
+                  const SizedBox(height: 5),
+                  Text(
+                    equipment.category,
+                    style: const TextStyle(
+                        color: Colors.white70,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
