@@ -9,6 +9,7 @@ class AccountTile extends StatelessWidget {
   final IconData? trailingIcon;
   final bool showSwitch; // Determines whether to show a switch or an icon
   final Widget? destinationScreen; // Optional destination screen
+  final VoidCallback? onPressed;
 
   const AccountTile({
     super.key,
@@ -17,6 +18,7 @@ class AccountTile extends StatelessWidget {
     this.trailingIcon,
     this.showSwitch = false,
     this.destinationScreen,
+    this.onPressed,
   });
 
   @override

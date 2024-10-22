@@ -1,4 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart'; // Add FirebaseAuth to get user info
 import 'package:flutter/material.dart';
+import 'package:gym_mate_admin/services/get_services.dart';
+import 'package:gym_mate_admin/services/send_notification.dart';
 
 import '../../../../res/colors/app_colors.dart';
 
@@ -10,8 +14,27 @@ class Notifications_view extends StatefulWidget {
 }
 
 class _Notifications_viewState extends State<Notifications_view> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  // Function to get the current user's ID
+  Future<String?> _getCurrentUserId() async {
+    User? user = _auth.currentUser;
+    return user?.uid;
+  }
+
+  // Function to get the current user's username or display name
+  Future<String?> _getCurrentUserName() async {
+    User? user = _auth.currentUser;
+    return user
+        ?.displayName; // Or use a specific field from your Firestore user document if available
+  }
+
   @override
   Widget build(BuildContext context) {
+    // Define dynamic title and body
+    String notificationTitle = "Hello👋🏻";
+    String notificationBody = "Please Submit your this month fee kindly!";
+
     return Scaffold(
         backgroundColor: AppColors.background,
         appBar: AppBar(
@@ -49,51 +72,81 @@ class _Notifications_viewState extends State<Notifications_view> {
           child: Column(
             children: [
               Center(
-                child: Container(
-                  width: 330,
-                  height: 100,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: Colors.white38,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        AppColors.primary, // Background color of the button
+                    padding: EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 10), // Adjust padding if needed
                   ),
-                  child: const Padding(
-                    padding: EdgeInsets.all(5.0),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment
-                          .start, // Aligns the content to the start
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment
-                                .start, // Aligns the text to the start
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Gym_mate 💪',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                    fontSize: 23),
-                              ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Text(
-                                'This is the test Notification ❤️‍🔥',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                    fontSize: 18),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+                  onPressed: () async {
+                    GetServerKey getServerkey = GetServerKey();
+                    String acessToken = await getServerkey.getServerKeyToken();
+                    print(acessToken);
+                  },
+                  child: Text(
+                    'Gen Api Token',
+                    style: TextStyle(
+                      color: Colors.white, // Text color
+                      fontSize: 16, // Text size
+                      fontWeight: FontWeight.bold, // Text style (optional)
                     ),
                   ),
                 ),
-              )
+              ),
+              const SizedBox(
+                height: 25,
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor:
+                      AppColors.primary, // Background color of the button
+                  padding: EdgeInsets.symmetric(
+                      horizontal: 20, vertical: 10), // Adjust padding if needed
+                ),
+                onPressed: () async {
+                  // Send the notification
+                  await SendNotificationService.sendNotificationUsingApi(
+                    token:
+                        "cF2tFbDPS3qYtmtv16sVb8:APA91bGB3I0XiaDoeGYpxZytpRpq4zNJ3lggX73M9q58iHCuVMzrbwlNO2YByIL-TuyrpTQb4OpP6JLDUGCsjrXz7lmF5PGGJnA-uGmsZWlYnTSPNNzAPaP8YIOh1YXVUcUy3ovJhBey",
+                    title: notificationTitle, // Dynamic title
+                    body: notificationBody, // Dynamic body
+                    data: {
+                      "screen": "cart",
+                    },
+                  );
+
+                  // Save the notification in Firestore with user information and timestamp
+                  String? userId = await _getCurrentUserId();
+                  String? userName = await _getCurrentUserName();
+
+                  if (userId != null) {
+                    await FirebaseFirestore.instance
+                        .collection('notifications')
+                        .doc(userId) // Store notifications by user ID
+                        .collection('user_notifications')
+                        .doc() // Auto-generated document ID for each notification
+                        .set({
+                      'title': notificationTitle, // Use dynamic title here
+                      'body': notificationBody, // Use dynamic body here
+                      'userId': userId,
+                      'userName':
+                          userName ?? 'Unknown', // Add username if available
+                      'timestamp': FieldValue
+                          .serverTimestamp(), // Save current server timestamp
+                    });
+                  }
+                },
+                child: Text(
+                  'Send Fee Nf🔔',
+                  style: TextStyle(
+                    color: Colors.white, // Text color
+                    fontSize: 16, // Text size
+                    fontWeight: FontWeight.bold, // Text style (optional)
+                  ),
+                ),
+              ),
             ],
           ),
         ));
