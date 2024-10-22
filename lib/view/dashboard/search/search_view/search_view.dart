@@ -43,7 +43,7 @@ class _SearchViewState extends State<SearchView> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarIconBrightness: Brightness.light,
       statusBarColor: AppColors.background,
     ));
@@ -66,7 +66,7 @@ class _SearchViewState extends State<SearchView> {
                 ),
               ),
               SizedBox(height: Get.height * 0.018),
-              const Row(
+              Row(
                 children: [
                   Text(
                     'New Podcast',
@@ -106,7 +106,7 @@ class _SearchViewState extends State<SearchView> {
               ),
               Row(
                 children: [
-                  const Text(
+                  Text(
                     "New Equipments",
                     style: TextStyle(
                       color: AppColors.primary,
