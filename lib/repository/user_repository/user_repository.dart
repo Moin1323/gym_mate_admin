@@ -6,7 +6,7 @@ import 'package:gym_mate_admin/models/exercise/exercise.dart';
 import 'package:gym_mate_admin/models/login/user_model.dart';
 import 'package:gym_mate_admin/services/equipment_service.dart';
 import 'package:gym_mate_admin/view/auth/login/login_view.dart';
-import 'package:gym_mate_admin/view/dashboard/Exercieses/excersice_datail.dart';
+import 'package:gym_mate_admin/view/dashboard/details_screens/excersice_datail.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserController extends GetxController {
