@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gym_mate_admin/models/exercise/exercise.dart';
 import 'package:gym_mate_admin/res/colors/app_colors.dart';
-import 'package:gym_mate_admin/view/dashboard/Exercieses/excersice_datail.dart'; // Import Get for navigation
+import 'package:gym_mate_admin/view/dashboard/details_screens/excersice_datail.dart'; // Import Get for navigation
 
 class MainExercisesView extends StatelessWidget {
   final List<Exercise> exercises; // Parameter to accept exercises

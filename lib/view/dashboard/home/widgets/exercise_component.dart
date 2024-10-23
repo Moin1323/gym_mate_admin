@@ -5,8 +5,8 @@ import 'package:gym_mate_admin/models/exercise/exercise.dart';
 import 'package:gym_mate_admin/models/login/user_model.dart';
 import 'package:gym_mate_admin/repository/user_repository/user_repository.dart';
 import 'package:gym_mate_admin/res/colors/app_colors.dart';
-import 'package:gym_mate_admin/view/dashboard/Exercieses/excersice_datail.dart';
-import 'package:gym_mate_admin/view/dashboard/Exercieses/main_exercises_view.dart';
+import 'package:gym_mate_admin/view/dashboard/details_screens/equipment_detail.dart';
+import 'package:gym_mate_admin/view/dashboard/details_screens/excersice_datail.dart';
 
 class PopularTrainings extends StatelessWidget {
   final UserController userController = Get.put(UserController());
@@ -35,28 +35,16 @@ class PopularTrainings extends StatelessWidget {
     ];
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: Get.height * 0.01),
-        Row(
-          children: [
-            Text(
-              "Exercises 🔥",
-              style: TextStyle(
-                  color: AppColors.secondary, fontWeight: FontWeight.bold),
-            ),
-            const Spacer(),
-            TextButton(
-              onPressed: () {
-                Get.to(() => MainExercisesView(
-                    title: title, exercises: combinedTrainings));
-              },
-              child: const Text(
-                'Edit',
-                style:
-                    TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
-              ),
-            ),
-          ],
+        Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Text(
+            "Exercises 🔥",
+            style: TextStyle(
+                color: AppColors.secondary, fontWeight: FontWeight.bold),
+          ),
         ),
         SizedBox(height: Get.height * 0.005),
         isLoading
@@ -159,30 +147,18 @@ class UserDetailsTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: Get.height * 0.01),
-        Row(
-          children: [
-            Text(
-              "User List 📋",
-              style: TextStyle(
-                  color: AppColors.secondary,
-                  fontWeight:
-                      FontWeight.bold), // Changed to AppColors.secondary
+        Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Text(
+            "User List 📋",
+            style: TextStyle(
+              color: AppColors.secondary,
+              fontWeight: FontWeight.bold, // Changed to AppColors.secondary
             ),
-            const Spacer(),
-            TextButton(
-              onPressed: () {
-                // Add your navigation to view all users
-              },
-              child: const Text(
-                'Edit',
-                style: TextStyle(
-                    color: Colors.blue,
-                    fontWeight: FontWeight.bold), // Keeping blue for button
-              ),
-            ),
-          ],
+          ),
         ),
         SizedBox(height: Get.height * 0.005),
         isLoading
@@ -202,7 +178,8 @@ class UserDetailsTab extends StatelessWidget {
                     children: users.map((user) {
                       return Padding(
                         padding: EdgeInsets.only(bottom: Get.height * 0.02),
-                        child: _buildUserCard(user),
+                        child:
+                            _buildUserCard(context, user), // Pass context here
                       );
                     }).toList(),
                   ),
@@ -212,7 +189,7 @@ class UserDetailsTab extends StatelessWidget {
     );
   }
 
-  Widget _buildUserCard(UserModel user) {
+  Widget _buildUserCard(BuildContext context, UserModel user) {
     return GestureDetector(
       onTap: () {
         // Navigate to UserDetail screen
@@ -221,10 +198,8 @@ class UserDetailsTab extends StatelessWidget {
         margin: const EdgeInsets.symmetric(horizontal: 10.0),
         padding: const EdgeInsets.all(10.0),
         decoration: BoxDecoration(
-          color:
-              AppColors.secondary.withOpacity(0.25), // Changed background color
-          borderRadius:
-              BorderRadius.circular(15), // Border radius for the whole card
+          color: AppColors.secondary.withOpacity(0.25), // Background color
+          borderRadius: BorderRadius.circular(15), // Border radius for the card
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -234,42 +209,132 @@ class UserDetailsTab extends StatelessWidget {
               height: 60, // Set a height for the icon container
               decoration: BoxDecoration(
                 color: AppColors.primary,
-                borderRadius:
-                    BorderRadius.circular(15), // Match border radius with card
+                borderRadius: BorderRadius.circular(15), // Match card radius
               ),
               child: ClipRRect(
-                borderRadius:
-                    BorderRadius.circular(15), // Match border radius with card
+                borderRadius: BorderRadius.circular(15), // Match card radius
                 child: Icon(Icons.person,
                     color: AppColors.background), // Default icon
               ),
             ),
             SizedBox(width: Get.width * 0.04),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  user.name ?? 'No name',
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16),
-                ),
-                const SizedBox(height: 5),
-                Text(
-                  user.email ?? 'No email',
-                  style: const TextStyle(
-                      color: Colors.white70,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14),
-                ),
-              ],
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    user.name ?? 'No name',
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16),
+                  ),
+                  const SizedBox(height: 5),
+                  Text(
+                    user.email ?? 'No email',
+                    style: const TextStyle(
+                        color: Colors.white70,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14),
+                  ),
+                ],
+              ),
+            ),
+            // Trailing icon with popup menu
+            PopupMenuButton<String>(
+              icon: const Icon(Icons.more_vert, color: Colors.white),
+              onSelected: (value) {
+                if (value == 'delete') {
+                  _showConfirmationDialog(
+                    context, // Use the correct context here
+                    title: 'Delete Account',
+                    content: 'Are you sure you want to delete your account?',
+                    onConfirm: () {
+                      _deleteUser(user);
+                    },
+                  );
+                } else if (value == 'deactivate') {
+                  _showConfirmationDialog(
+                    context, // Use the correct context here
+                    title: 'Deactivate Account',
+                    content:
+                        'Are you sure you want to deactivate your account?',
+                    onConfirm: () {
+                      _deactivateUser(user);
+                    },
+                  );
+                }
+              },
+              itemBuilder: (BuildContext context) {
+                return [
+                  const PopupMenuItem(
+                    value: 'delete',
+                    child: Row(
+                      children: [
+                        Icon(Icons.delete, color: Colors.red),
+                        SizedBox(width: 10),
+                        Text('Delete'),
+                      ],
+                    ),
+                  ),
+                  const PopupMenuItem(
+                    value: 'deactivate',
+                    child: Row(
+                      children: [
+                        Icon(Icons.block, color: Colors.orange),
+                        SizedBox(width: 10),
+                        Text('Deactivate'),
+                      ],
+                    ),
+                  ),
+                ];
+              },
             ),
           ],
         ),
       ),
     );
+  }
+
+  void _showConfirmationDialog(BuildContext context,
+      {required String title,
+      required String content,
+      required VoidCallback onConfirm}) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(content),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Dismiss the dialog
+              },
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Dismiss the dialog
+                onConfirm(); // Call the confirmation action
+              },
+              child: const Text('Yes'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _deleteUser(UserModel user) {
+    // Logic to delete the user
+    print("Deleting user: ${user.name}");
+  }
+
+  void _deactivateUser(UserModel user) {
+    // Logic to deactivate the user
+    print("Deactivating user: ${user.name}");
   }
 }
 
@@ -287,30 +352,17 @@ class EquipmentTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: Get.height * 0.01),
-        Row(
-          children: [
-            Text(
-              "Equipments 🏋️‍♂️",
-              style: TextStyle(
-                  color: AppColors.secondary,
-                  fontWeight:
-                      FontWeight.bold), // Changed to AppColors.secondary
-            ),
-            const Spacer(),
-            TextButton(
-              onPressed: () {
-                // Get.to(() => EquipmentDetailView(equipments: equipments));
-              },
-              child: const Text(
-                'Edit',
-                style: TextStyle(
-                    color: Colors.blue,
-                    fontWeight: FontWeight.bold), // Keeping blue for button
-              ),
-            ),
-          ],
+        Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Text(
+            "Equipments 🏋️‍♂️",
+            style: TextStyle(
+                color: AppColors.secondary,
+                fontWeight: FontWeight.bold), // Changed to AppColors.secondary
+          ),
         ),
         SizedBox(height: Get.height * 0.005),
         isLoading
@@ -343,7 +395,7 @@ class EquipmentTab extends StatelessWidget {
   Widget _buildEquipmentCard(Equipment equipment) {
     return GestureDetector(
       onTap: () {
-        // Navigate to EquipmentDetail screen
+        Get.to(() => EquipmentDetail(equipment: equipment));
       },
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 10.0),
