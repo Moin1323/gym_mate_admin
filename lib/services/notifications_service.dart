@@ -1,9 +1,13 @@
 import 'dart:math';
 
+import 'package:app_settings/app_settings.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:get/get.dart';
+
+import '../view/dashboard/home/home_view.dart';
 
 class NotificationServices {
   FirebaseMessaging messaging = FirebaseMessaging.instance;
@@ -26,11 +30,19 @@ class NotificationServices {
         AuthorizationStatus.provisional) {
       print('User granted provisional permission');
     } else {
-      print('User denied permission');
+      Get.snackbar(
+        'Notification permission denied',
+        'Please allow notifications to recive updates.',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      Future.delayed(Duration(seconds: 2), () {
+        AppSettings.openAppSettings(type: AppSettingsType.notification);
+      });
     }
   }
 
   // Function to initialize local notifications
+  // Modify initLocalNotifications
   void initLocalNotifications(
       BuildContext context, RemoteMessage message) async {
     var androidInitializationSettings =
@@ -39,20 +51,34 @@ class NotificationServices {
     var initializationSettings = InitializationSettings(
       android: androidInitializationSettings,
     );
+
     await _flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
-      onDidReceiveNotificationResponse: (payload) {},
+      onDidReceiveNotificationResponse: (NotificationResponse response) {
+        // Check if the notification has any payload or specific data
+        if (response.payload != null) {
+          // Handle the payload here and navigate to HomeView or any specific view
+          Get.to(() => HomeView());
+        }
+      },
     );
   }
 
   // Firebase message listener
   void firebaseInit() {
     FirebaseMessaging.onMessage.listen((message) {
+      // App is in the foreground and a notification is received
       if (kDebugMode) {
         print(message.notification!.title.toString());
         print(message.notification!.body.toString());
       }
       showNotification(message);
+    });
+
+    // Handle when the app is opened from a notification (background/terminated state)
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      // Navigate to HomeView when the app is opened from a notification
+      Get.to(() => HomeView());
     });
   }
 
@@ -89,7 +115,13 @@ class NotificationServices {
 
   // Get device token for push notifications
   Future<String> getDeviceToken() async {
+    NotificationSettings settings = await messaging.requestPermission(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
     String? token = await messaging.getToken();
+    print("token => $token");
     return token!;
   }
 
