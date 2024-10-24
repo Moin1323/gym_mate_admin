@@ -10,8 +10,6 @@ class TabBarViewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("Equipment List: ${userController.equipments}");
-
     return Expanded(
       child: Obx(() {
         if (userController.isLoading.value) {
@@ -22,20 +20,22 @@ class TabBarViewWidget extends StatelessWidget {
               // First Tab - User Details with user icon
               UserDetailsTab(
                 users: userController.usersList,
+                isLoading: userController.isLoading.value,
               ),
 
               // Second Tab - List of equipment
               EquipmentTab(
-                equipments: userController.equipments ??
-                    [], // Your list of equipment from the controller
+                equipments: userController.equipments ?? [],
                 isLoading: userController.isLoading.value,
               ),
 
+              // Third Tab - List of popular exercises
               PopularTrainings(
-                trainings: userController.exercises['all'] ??
-                    [], // Accessing all exercises
+                cardio: userController.exercises['cardio'] ?? [],
+                boxing: userController.exercises['boxing'] ?? [],
+                gym: userController.exercises['gym'] ?? [],
                 isLoading: userController.isLoading.value,
-                title: 'Exercises',
+                title: 'Cardio',
               ),
             ],
           );

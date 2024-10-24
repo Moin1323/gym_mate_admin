@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:gym_mate_admin/res/colors/app_colors.dart';
 
 class TabrComponent extends StatelessWidget {
-  final String imageAsset; // Image asset path
+  final IconData icon; // Image asset path
   final String label; // Text label for the tab
 
   const TabrComponent({
     super.key,
-    required this.imageAsset,
+    required this.icon,
     required this.label,
   });
 
@@ -23,25 +24,20 @@ class TabrComponent extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center, // Center the content
             children: [
-              CircleAvatar(
-                backgroundColor:
-                    Colors.white10, // Background color for the avatar
-                radius: 12, // Size of the CircleAvatar
-                child: ClipOval(
-                  child: Padding(
-                    padding: const EdgeInsets.all(2.0),
-                    child: Image.asset(
-                      imageAsset, // Use the imageAsset parameter
-                      fit: BoxFit.cover,
-                    ),
+              ClipOval(
+                child: Padding(
+                  padding: const EdgeInsets.all(2.0),
+                  child: Icon(
+                    icon,
+                    color: AppColors.secondary,
                   ),
                 ),
               ),
               const SizedBox(width: 5),
               Text(
                 label, // Use the label parameter
-                style: const TextStyle(
-                  color: Colors.white, // Text color
+                style: TextStyle(
+                  color: AppColors.secondary, // Text color
                   fontSize: 15, // Font size
                 ),
               ),

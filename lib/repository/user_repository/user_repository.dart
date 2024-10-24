@@ -5,9 +5,8 @@ import 'package:gym_mate_admin/models/equipments/equipments.dart';
 import 'package:gym_mate_admin/models/exercise/exercise.dart';
 import 'package:gym_mate_admin/models/login/user_model.dart';
 import 'package:gym_mate_admin/services/equipment_service.dart';
-import 'package:gym_mate_admin/services/exercise_service.dart';
 import 'package:gym_mate_admin/view/auth/login/login_view.dart';
-import 'package:gym_mate_admin/view/dashboard/Exercieses/excersice_datail.dart';
+import 'package:gym_mate_admin/view/dashboard/details_screens/excersice_datail.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserController extends GetxController {
@@ -29,8 +28,6 @@ class UserController extends GetxController {
 
   final EquipmentService _equipmentService =
       EquipmentService(); // Initialize EquipmentService
-
-  final ExerciseService exerciseService = ExerciseService();
 
   @override
   void onInit() {
@@ -108,22 +105,67 @@ class UserController extends GetxController {
   Future<void> fetchAllExercises() async {
     isLoading.value = true; // Start loading
     try {
-      exercises.value =
-          await exerciseService.fetchAllExercises(); // Fetch all exercises
-      print("Fetched exercises: ${exercises.value}");
+      // Initialize categorized exercises
+      Map<String, List<Exercise>> categorizedExercises = {
+        "boxing": [],
+        "gym": [],
+        "cardio": [],
+      };
+
+      // List of workout categories to fetch exercises from
+      List<String> categories = ['boxing', 'gym', 'cardio'];
+
+      // Loop through each category and fetch exercises
+      for (String category in categories) {
+        print("Fetching exercises for $category..."); // Debugging log
+
+        // Access the subcollection 'exercises' under each category
+        QuerySnapshot snapshot = await FirebaseFirestore.instance
+            .collection('Workouts')
+            .doc(category)
+            .collection('exercises')
+            .get();
+
+        // Check if snapshot has documents
+        if (snapshot.docs.isEmpty) {
+          print("No exercises found for $category."); // Debugging log
+          continue;
+        }
+
+        // Loop through the fetched documents
+        for (var doc in snapshot.docs) {
+          if (doc.exists) {
+            Exercise exercise =
+                Exercise.fromJson(doc.data() as Map<String, dynamic>);
+
+            // Add exercise to the appropriate category
+            categorizedExercises[category]?.add(exercise);
+            print(
+                "Added exercise: ${exercise.name} to $category"); // Debugging log
+          } else {
+            print(
+                "Document ${doc.id} in $category has no data."); // Debugging log
+          }
+        }
+      }
+
+      // Update the observable variable
+      exercises.value = categorizedExercises;
+      print("Exercises fetched successfully: ${exercises.value}");
     } catch (e) {
-      print("Error in UserController fetching exercises: $e");
+      print("Error fetching exercises: $e");
     } finally {
       isLoading.value = false; // Stop loading
     }
   }
 
   // New method to fetch all equipments
+  // New method to fetch all equipments
   Future<void> fetchAllEquipments() async {
     isLoading.value = true; // Start loading
     try {
-      List<Equipment> equipmentList = await _equipmentService
-          .fetchAllEquipments(); // Ensure this method exists in EquipmentService
+      List<Equipment> equipmentList =
+          await _equipmentService.fetchAllEquipments();
       equipments.value = equipmentList; // Update the observable variable
       print("Equipments fetched successfully: ${equipments.value}");
     } catch (e) {

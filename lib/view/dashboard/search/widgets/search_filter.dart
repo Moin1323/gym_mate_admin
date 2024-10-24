@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:gym_mate_admin/res/colors/app_colors.dart';
-import 'package:gym_mate_admin/view/dashboard/Exercieses/excersice_datail.dart';
+import 'package:gym_mate_admin/view/dashboard/details_screens/excersice_datail.dart';
 import 'package:gym_mate_admin/view/dashboard/search/widgets/search_textfeild.dart'
     as custom; // Add prefix 'custom'
 import 'package:gym_mate_admin/models/exercise/instruction.dart';
