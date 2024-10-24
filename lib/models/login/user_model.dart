@@ -6,8 +6,13 @@ class UserModel {
   String? name;
   DateTime? createdAt;
   String? token;
-
-  UserModel({this.cnic, this.email, this.name, this.createdAt, this.token});
+  UserModel({
+    this.cnic,
+    this.email,
+    this.name,
+    this.createdAt,
+    this.token,
+  });
 
   UserModel.fromJson(Map<String, dynamic> json) {
     cnic = json['cnic'];

@@ -70,7 +70,7 @@ class SignupViewModel extends GetxController {
       // Fetch device token for push notifications
       String deviceToken = await NotificationServices().getDeviceToken();
 
-      // Save user details along with the device token in Firestore
+      // Save user details along with the device token and role in Firestore
       await saveUserDetails(userCredential.user!.uid, deviceToken);
 
       // Notify user of successful registration
@@ -102,6 +102,7 @@ class SignupViewModel extends GetxController {
         'email': emailController.text.trim(),
         'cnic': cnicController.text.trim(),
         'deviceToken': deviceToken, // Save the device token
+        'role': 'Admin', // Save the role as Admin
         'createdAt': FieldValue.serverTimestamp(),
       });
       print('User details saved successfully for user ID: $userId');

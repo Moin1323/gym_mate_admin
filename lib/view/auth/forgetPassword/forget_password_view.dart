@@ -21,7 +21,7 @@ class ForgotPasswordView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(height: 50),
-            const Text(
+            Text(
               'Forgot Password',
               style: TextStyle(
                 fontSize: 28,
@@ -31,7 +31,7 @@ class ForgotPasswordView extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20),
-            const Text(
+            Text(
               'Enter your registered email address and we’ll send you a link to reset your password.',
               style: TextStyle(
                 fontSize: 16,

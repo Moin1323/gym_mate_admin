@@ -29,8 +29,7 @@ class CustomTextField extends StatelessWidget {
       focusNode: focusNode,
       obscureText: obscureText,
       validator: validator,
-      style: const TextStyle(
-          color: AppColors.secondary, fontSize: 18), // Text color
+      style: TextStyle(color: AppColors.secondary, fontSize: 18), // Text color
       onFieldSubmitted: onFieldSubmitted,
       decoration: InputDecoration(
         labelText: labelText,
@@ -45,7 +44,7 @@ class CustomTextField extends StatelessWidget {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide:
-              const BorderSide(color: AppColors.primary), // Color when focused
+              BorderSide(color: AppColors.primary), // Color when focused
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),

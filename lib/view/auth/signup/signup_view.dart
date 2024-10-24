@@ -47,7 +47,7 @@ class _SignupViewState extends State<SignupView> {
                     const SizedBox(height: 100),
 
                     // Signup Heading
-                    const Align(
+                    Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
                         "Signup",
@@ -177,7 +177,7 @@ class _SignupViewState extends State<SignupView> {
                         return signupVM.loading.value
                             ? const CircularProgressIndicator(
                                 color: Colors.white)
-                            : const Text(
+                            : Text(
                                 'SignUp',
                                 style: TextStyle(
                                     color: AppColors.background, fontSize: 20),
@@ -190,8 +190,8 @@ class _SignupViewState extends State<SignupView> {
                     RichText(
                       text: TextSpan(
                         text: "Already have an account? ",
-                        style: const TextStyle(
-                            color: AppColors.secondary, fontSize: 16),
+                        style:
+                            TextStyle(color: AppColors.secondary, fontSize: 16),
                         children: [
                           TextSpan(
                             text: "Login",

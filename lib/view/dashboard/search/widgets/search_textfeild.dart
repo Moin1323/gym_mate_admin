@@ -40,10 +40,10 @@ class _SearchTextfeildState extends State<SearchTextfeild> {
         focusedBorder: OutlineInputBorder(
           borderRadius:
               BorderRadius.circular(27), // Rounded corners when focused
-          borderSide: const BorderSide(
-              color: AppColors.primary), // Border color when focused
+          borderSide:
+              BorderSide(color: AppColors.primary), // Border color when focused
         ),
-        prefixIcon: const Icon(
+        prefixIcon: Icon(
           Iconsax.search_normal_1,
           color: AppColors.secondary, // Place icon at the start
         ),
