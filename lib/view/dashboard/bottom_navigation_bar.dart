@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gym_mate_admin/view/dashboard/search/search_view/search_view.dart';
 import 'package:iconsax/iconsax.dart';
 
 import 'settings/settings_view.dart';
@@ -29,7 +28,7 @@ class _BottomNavigationbarState extends State<BottomNavigationbar> {
   // List of screens
   final List<Widget> _screens = [
     const HomeView(),
-    const SearchView(),
+    const Placeholder(),
     const SettingsView()
   ];
 
