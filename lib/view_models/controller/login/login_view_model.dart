@@ -113,4 +113,28 @@ class LoginViewModel extends GetxController {
       );
     }
   }
+
+  // Logout
+  Future<void> logout() async {
+    try {
+      // Sign out from Firebase
+      await FirebaseAuth.instance.signOut();
+
+      // Clear shared preferences or any other persistent data
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.clear(); // This clears all saved data like login status
+
+      print("Done logout");
+
+      // Navigate to the login screen
+      Get.offAllNamed('/login_view'); // Make sure this matches your route name
+    } catch (e) {
+      Get.snackbar(
+        'Logout Error',
+        'Failed to log out. Please try again later.',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
+  }
 }
