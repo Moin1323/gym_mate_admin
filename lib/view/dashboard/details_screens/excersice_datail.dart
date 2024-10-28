@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gym_mate_admin/models/exercise/exercise.dart';
+import 'package:gym_mate_admin/repository/user_repository/user_repository.dart';
 import 'package:gym_mate_admin/res/colors/app_colors.dart';
 
 class ExerciseDetail extends StatelessWidget {
@@ -10,6 +11,9 @@ class ExerciseDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final UserController userController =
+        Get.find(); // Get the instance of UserController
+
     return Scaffold(
       backgroundColor: AppColors.background,
       body: Stack(
@@ -98,12 +102,38 @@ class ExerciseDetail extends StatelessWidget {
                             ),
                           ),
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              // Show a confirmation dialog before deletion
+                              bool? confirmDelete = await Get.dialog<bool>(
+                                AlertDialog(
+                                  title: const Text('Delete Exercise'),
+                                  content: const Text(
+                                      'Are you sure you want to delete this exercise?'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Get.back(result: false),
+                                      child: const Text('Cancel'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () => Get.back(result: true),
+                                      child: const Text('Delete'),
+                                    ),
+                                  ],
+                                ),
+                              );
+
+                              if (confirmDelete == true) {
+                                // Call deleteExercise method from UserController
+                                await userController.deleteExercise(
+                                    exercise.category, exercise.name);
+                                Get.back(); // Optionally go back after deletion
+                              }
+                            },
                             icon: Icon(
                               Icons.delete,
                               color: AppColors.secondary,
                             ),
-                          )
+                          ),
                         ],
                       ),
                       const SizedBox(height: 20),
@@ -137,24 +167,17 @@ class ExerciseDetail extends StatelessWidget {
           _infoRow(Icons.emoji_flags, "Difficulty: ${exercise.difficulty}"),
           const SizedBox(height: 10),
           _infoRow(Icons.sports_gymnastics, "Equipment: ${exercise.equipment}"),
-          // Add any more details here if needed
         ],
       ),
     );
   }
 
-  // Standard row for details
   Widget _infoRow(IconData icon, String text) {
     return Row(
       children: [
-        Icon(icon, color: AppColors.primary),
+        Icon(icon, color: AppColors.secondary),
         const SizedBox(width: 10),
-        Expanded(
-          child: Text(
-            text,
-            style: TextStyle(color: AppColors.secondary),
-          ),
-        ),
+        Text(text, style: TextStyle(color: AppColors.secondary)),
       ],
     );
   }

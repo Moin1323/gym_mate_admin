@@ -33,6 +33,7 @@ class ExerciseService {
             .toList();
 
         Exercise exercise = Exercise(
+          id: doc.id, // Use Firestore document ID as unique identifier
           name: data['name'],
           category: category, // Use the normalized category
           muscleGroup: data['muscleGroup'],
