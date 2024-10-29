@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData.light(), // Define your light theme
         darkTheme: ThemeData.dark(), // Define your dark theme
         themeMode: themeController.themeMode.value, // Set theme mode
-        home: const SplashView(),
+        home: SplashView(),
         getPages: AppRoutes.appRoutes(),
       ),
     );
