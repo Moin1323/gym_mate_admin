@@ -1,26 +1,22 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gym_mate_admin/models/login/user_model.dart';
 import 'package:gym_mate_admin/repository/login_repository/login_repository.dart';
 import 'package:gym_mate_admin/view/dashboard/bottom_navigation_bar.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginViewModel extends GetxController {
-  final _api = LoginRepository(); // Optional for any API-related login
+  final _api = LoginRepository(); // Optional, if you need to use a login API
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final emailFocusNode = FocusNode();
   final passwordFocusNode = FocusNode();
-  RxBool loading = false.obs;
+  RxBool loading = false.obs; // Loading state indicator
+  Rx<UserModel?> userModel = Rx<UserModel?>(null); // Store user details
 
-  @override
-  void onInit() {
-    super.onInit();
-    checkLoginStatus(); // Check login status on initialization
-  }
-
-  // Main login method
+  // Main login method that calls Firebase sign in
   void loginApi() {
     signInWithEmailAndPassword();
   }
@@ -33,13 +29,63 @@ class LoginViewModel extends GetxController {
 
     if (email.isNotEmpty && password.isNotEmpty) {
       try {
+        print("Attempting login with Email: $email");
+
+        // Firebase Authentication sign in
         UserCredential userCredential = await _auth.signInWithEmailAndPassword(
           email: email,
           password: password,
         );
-        await _saveLoginStatus(true);
+        print("Login successful, User: ${userCredential.user?.email}");
+
+        // Fetch user details from Firestore
+        final userId = userCredential.user?.uid;
+        if (userId != null) {
+          final userDoc = await FirebaseFirestore.instance
+              .collection('users')
+              .doc(userId)
+              .get();
+
+          if (userDoc.exists) {
+            // Parse Firestore document into UserModel
+            UserModel userModel =
+                UserModel.fromJson(userDoc.data() as Map<String, dynamic>);
+            print(
+                "Fetched User Details: ${userModel.name}, UID: ${userModel.uid}, Role: ${userModel.role}");
+
+            // Check if the role matches the required role for this app
+            if (userModel.role != "Admin") {
+              // If the role is not "Admin", show an error and sign out
+              Get.snackbar(
+                'Access Denied',
+                'This account is not authorized to access the admin app.',
+                backgroundColor: Colors.red,
+                colorText: Colors.white,
+              );
+
+              // Sign out to prevent unauthorized access
+              await _auth.signOut();
+              loading.value = false;
+              return;
+            }
+
+            // You can store this userModel instance for further use or state management
+          }
+        }
+
+        // Clear email and password fields after successful login
         clearFields();
-        Get.offAll(() => const BottomNavigationbar()); // Redirect to main view
+
+        // Ensure HomeController is initialized before navigating
+        if (!Get.isRegistered<HomeController>()) {
+          Get.put(HomeController());
+        }
+
+        // Reset currentIndex to 0 (Home view)
+        Get.find<HomeController>().changeIndex(0);
+
+        // Navigate to the BottomNavigationBar (main dashboard)
+        Get.offAll(() => const BottomNavigationbar());
       } on FirebaseAuthException catch (e) {
         Get.snackbar(
           'Login Error',
@@ -47,7 +93,8 @@ class LoginViewModel extends GetxController {
           backgroundColor: Colors.red,
           colorText: Colors.white,
         );
-        passwordController.clear(); // Clear only if there's an error
+        print("FirebaseAuthException: ${e.message}");
+        passwordController.clear();
       } catch (e) {
         Get.snackbar(
           'Error',
@@ -55,6 +102,7 @@ class LoginViewModel extends GetxController {
           backgroundColor: Colors.red,
           colorText: Colors.white,
         );
+        print("General Error during login: $e");
       } finally {
         loading.value = false;
       }
@@ -69,72 +117,36 @@ class LoginViewModel extends GetxController {
     }
   }
 
-  // Save login status in shared preferences
-  Future<void> _saveLoginStatus(bool isLoggedIn) async {
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('isLoggedIn', isLoggedIn);
-    } catch (e) {
-      Get.snackbar(
-        'Preferences Error',
-        'Failed to save login status',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
-    }
-  }
-
-  // Clear input fields
+  // Clear email and password fields
   void clearFields() {
     emailController.clear();
     passwordController.clear();
   }
 
-  // Get current user from Firebase
+  // Get the current logged-in user from Firebase
   User? getCurrentUser() {
     return _auth.currentUser;
   }
 
-  // Check if user is already logged in
-  Future<void> checkLoginStatus() async {
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
-
-      if (isLoggedIn && getCurrentUser() != null) {
-        Get.offAll(() => const BottomNavigationbar());
-      }
-    } catch (e) {
-      Get.snackbar(
-        'Error',
-        'Failed to check login status',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
-    }
-  }
-
-  // Logout
+  // Logout functionality to sign out the user
   Future<void> logout() async {
     try {
-      // Sign out from Firebase
-      await FirebaseAuth.instance.signOut();
+      await FirebaseAuth.instance.signOut(); // Firebase sign-out
 
-      // Clear shared preferences or any other persistent data
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.clear(); // This clears all saved data like login status
+      // Clear user data on logout
+      userModel.value = null;
 
-      print("Done logout");
-
-      // Navigate to the login screen
-      Get.offAllNamed('/login_view'); // Make sure this matches your route name
+      // Navigate back to the login screen after logging out
+      Get.offAllNamed('/login_view'); // Adjust this to match your route name
     } catch (e) {
+      // Handle logout errors
       Get.snackbar(
         'Logout Error',
         'Failed to log out. Please try again later.',
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
+      print("Logout Error: $e");
     }
   }
 }
