@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gym_mate_admin/models/login/user_model.dart';
 import 'package:gym_mate_admin/view/auth/login/login_view.dart';
 
 import '../../../services/notifications_service.dart';
@@ -70,8 +71,19 @@ class SignupViewModel extends GetxController {
       // Fetch device token for push notifications
       String deviceToken = await NotificationServices().getDeviceToken();
 
-      // Save user details along with the device token in Firestore
-      await saveUserDetails(userCredential.user!.uid, deviceToken);
+      // Create a UserModel instance with the new user data
+      UserModel newUser = UserModel(
+        uid: userCredential.user!.uid,
+        name: nameController.text.trim(),
+        email: emailController.text.trim(),
+        cnic: cnicController.text.trim(),
+        createdAt: DateTime.now(),
+        token: deviceToken,
+        role: 'Admin',
+      );
+
+      // Save user details in Firestore
+      await saveUserDetails(newUser);
 
       // Notify user of successful registration
       Get.defaultDialog(
@@ -95,16 +107,13 @@ class SignupViewModel extends GetxController {
     }
   }
 
-  Future<void> saveUserDetails(String userId, String deviceToken) async {
+  Future<void> saveUserDetails(UserModel user) async {
     try {
-      await FirebaseFirestore.instance.collection('users').doc(userId).set({
-        'name': nameController.text.trim(),
-        'email': emailController.text.trim(),
-        'cnic': cnicController.text.trim(),
-        'deviceToken': deviceToken, // Save the device token
-        'createdAt': FieldValue.serverTimestamp(),
-      });
-      print('User details saved successfully for user ID: $userId');
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .set(user.toJson());
+      print('User details saved successfully for user ID: ${user.uid}');
     } catch (e) {
       print('Failed to save user details: $e');
       Get.snackbar('Error', 'Failed to save user details.',

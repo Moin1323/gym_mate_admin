@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gym_mate_admin/res/colors/app_colors.dart';
+import 'package:gym_mate_admin/res/theme/theme_controller.dart';
+import 'package:gym_mate_admin/view/dashboard/home/widgets/notifications_view.dart';
+import 'package:gym_mate_admin/view_models/controller/login/login_view_model.dart';
 
-import '../../auth/login/login_view.dart';
 import 'widgets/AccountTile.dart'; // Ensure this file exists in your project
 
 class SettingsView extends StatefulWidget {
@@ -14,12 +15,14 @@ class SettingsView extends StatefulWidget {
 }
 
 class _SettingsViewState extends State<SettingsView> {
+  final LoginViewModel loginVM = Get.put(LoginViewModel());
+  final ThemeController themeController =
+      Get.put(ThemeController()); // Initialize ThemeController
+
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarIconBrightness: Brightness.light,
-      statusBarColor: AppColors.background,
-    ));
+    // Get current user information
+    final user = loginVM.getCurrentUser();
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -49,7 +52,7 @@ class _SettingsViewState extends State<SettingsView> {
                 ),
                 SizedBox(height: Get.height * 0.002),
                 Text(
-                  'Josh Dor',
+                  user?.displayName ?? 'User Name', // Fallback for no user
                   style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
@@ -67,9 +70,11 @@ class _SettingsViewState extends State<SettingsView> {
                     padding: EdgeInsets.all(5.0),
                     child: Center(
                       child: Text(
-                        '👑 Id: 1237',
+                        '👑 Id: 1237', // Replace with dynamic ID if available
                         style: TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.bold),
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black),
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -81,57 +86,43 @@ class _SettingsViewState extends State<SettingsView> {
           Padding(
             padding: const EdgeInsets.only(top: 335.0, left: 10, right: 10),
             child: SizedBox(
-              height:
-                  Get.height * 0.52, // Approximately 65% of the screen height
+              height: Get.height * 0.52,
               child: ListView(
                 padding: EdgeInsets.zero,
                 children: [
-                  const AccountTile(
+                  AccountTile(
                     accountName: 'Edit Profile',
                     leadingIcon: Icons.account_circle,
                     trailingIcon: Icons.chevron_right,
+                    destinationScreen: const Placeholder(),
                   ),
-                  const AccountTile(
+                  AccountTile(
                     accountName: 'Password Change',
                     leadingIcon: Icons.lock_clock,
                     trailingIcon: Icons.chevron_right,
+                    destinationScreen: const Placeholder(),
                   ),
-                  const AccountTile(
-                    accountName: 'Subscription',
-                    leadingIcon: Icons.subscriptions_rounded,
-                    trailingIcon: Icons.chevron_right,
-                  ),
-                  const AccountTile(
-                    accountName: 'Saved Items',
-                    leadingIcon: Icons.favorite,
-                    trailingIcon: Icons.chevron_right,
-                  ),
-                  const AccountTile(
+                  AccountTile(
                     accountName: 'Notifications',
                     leadingIcon: Icons.notifications,
-                    showSwitch: true, // Show CupertinoSwitch for Notifications
+                    trailingIcon: Icons.chevron_right,
+                    destinationScreen:
+                        const notificationsView(), // Pass the ThemeController
                   ),
-                  const AccountTile(
-                    accountName: 'Theme',
+                  AccountTile(
+                    accountName: 'Dark Theme',
                     leadingIcon: Icons.color_lens_outlined,
                     showSwitch: true,
-                  ),
-                  const AccountTile(
-                    accountName: 'Privary & Security',
-                    leadingIcon: Icons.privacy_tip,
-                    trailingIcon: Icons.chevron_right,
-                  ),
-                  const AccountTile(
-                    accountName: 'Complains & Help',
-                    leadingIcon: Icons.help,
-                    trailingIcon: Icons.chevron_right,
                   ),
                   AccountTile(
                     accountName: 'Log out',
                     leadingIcon: Icons.logout,
-                    destinationScreen: LoginView(),
+                    trailingIcon: Icons.chevron_right,
+                    onPressed: () {
+                      loginVM
+                          .logout(); // Call the logout function from the view model
+                    },
                   ),
-                  // Add more AccountTiles as needed
                 ],
               ),
             ),
