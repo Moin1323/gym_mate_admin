@@ -1,36 +1,25 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gym_mate_admin/models/exercise/exercise.dart';
-import 'package:gym_mate_admin/repository/user_repository/user_repository.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:gym_mate_admin/models/equipments/equipments.dart';
 import 'package:gym_mate_admin/res/colors/app_colors.dart';
-import 'package:gym_mate_admin/view/dashboard/details_screens/excersice_datail.dart';
+import 'package:gym_mate_admin/view/dashboard/details_screens/equipment_detail.dart';
 
-class PopularTrainings extends StatelessWidget {
-  final UserController userController = Get.put(UserController());
-  final List<Exercise> cardio; // Cardio exercises list
-  final List<Exercise> gym; // Gym exercises list
-  final List<Exercise> boxing; // Boxing exercises list
-  final String title;
+class EquipmentTab extends StatelessWidget {
+  final List<Equipment> equipments;
   final bool isLoading;
+  final String title = "Equipments";
 
-  PopularTrainings({
+  const EquipmentTab({
     super.key,
-    required this.cardio,
-    required this.gym,
-    required this.boxing,
+    required this.equipments,
     required this.isLoading,
-    required this.title,
   });
 
   @override
   Widget build(BuildContext context) {
-    // Combine the three lists into a single list
-    List<Exercise> combinedTrainings = [
-      ...cardio,
-      ...gym,
-      ...boxing,
-    ];
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -38,30 +27,31 @@ class PopularTrainings extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(10.0),
           child: Text(
-            "Exercises 🔥",
+            "Equipments 🏋️‍♂️",
             style: TextStyle(
-                color: AppColors.secondary, fontWeight: FontWeight.bold),
+                color: AppColors.secondary,
+                fontWeight: FontWeight.bold), // Changed to AppColors.secondary
           ),
         ),
         SizedBox(height: Get.height * 0.005),
         isLoading
             ? const Center(
                 child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                      Colors.blue), // Keeping blue for loading indicator
                 ),
               )
             : Container(
-                height:
-                    Get.height * 0.45, // Set a fixed height for scrollable area
+                height: Get.height * 0.45, // Set height for scrollable area
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15),
                 ),
                 child: SingleChildScrollView(
                   child: Column(
-                    children: combinedTrainings.map((training) {
+                    children: equipments.map((equipment) {
                       return Padding(
                         padding: EdgeInsets.only(bottom: Get.height * 0.02),
-                        child: _buildTrainingCard(training),
+                        child: _buildEquipmentCard(equipment),
                       );
                     }).toList(),
                   ),
@@ -71,17 +61,17 @@ class PopularTrainings extends StatelessWidget {
     );
   }
 
-  Widget _buildTrainingCard(Exercise training) {
+  Widget _buildEquipmentCard(Equipment equipment) {
     return GestureDetector(
       onTap: () {
-        // Navigate to ExerciseDetail screen
-        Get.to(() => ExerciseDetail(exercise: training));
+        Get.to(() => EquipmentDetail(equipment: equipment));
       },
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 10.0),
         padding: const EdgeInsets.all(10.0),
         decoration: BoxDecoration(
-          color: AppColors.secondary.withOpacity(0.25), // Background color
+          color:
+              AppColors.secondary.withOpacity(0.25), // Changed background color
           borderRadius: BorderRadius.circular(15),
         ),
         child: Row(
@@ -90,12 +80,18 @@ class PopularTrainings extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(15),
               child: Image.network(
-                training.animationUrl,
+                equipment.imageUrl,
+                fit: BoxFit.cover,
                 width: 60, // Fixed width for image
                 height: 60, // Fixed height for image
-                fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
-                  return const Center(child: Text('Image not available'));
+                  return const Center(
+                    child: Icon(
+                      Icons.fitness_center, // Use a fitness-related icon
+                      size: 30,
+                      color: Colors.white,
+                    ),
+                  );
                 },
               ),
             ),
@@ -105,7 +101,7 @@ class PopularTrainings extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    training.name,
+                    equipment.name,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
                         color: Colors.white,
@@ -114,7 +110,7 @@ class PopularTrainings extends StatelessWidget {
                   ),
                   const SizedBox(height: 5),
                   Text(
-                    training.category,
+                    equipment.category,
                     style: const TextStyle(
                         color: Colors.white70,
                         fontWeight: FontWeight.w500,

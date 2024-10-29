@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gym_mate_admin/repository/user_repository/user_repository.dart';
+import 'package:gym_mate_admin/view/dashboard/home/widgets/equipment_component.dart';
 import 'package:gym_mate_admin/view/dashboard/home/widgets/exercise_component.dart';
+import 'package:gym_mate_admin/view/dashboard/home/widgets/user_component.dart';
 
 class TabBarViewWidget extends StatelessWidget {
   final UserController userController;

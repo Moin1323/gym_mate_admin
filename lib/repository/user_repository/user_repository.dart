@@ -17,6 +17,7 @@ class UserController extends GetxController {
   var equipments = <Equipment>[].obs; // Initialize equipments
   var isLoading = true.obs;
   var singleExercise = Exercise(
+    id: '', // Initialize ID for single exercise
     name: "",
     instructions: [],
     category: '',
@@ -159,8 +160,7 @@ class UserController extends GetxController {
     }
   }
 
-  // New method to fetch all equipments
-  // New method to fetch all equipments
+  // Method to fetch all equipments
   Future<void> fetchAllEquipments() async {
     isLoading.value = true; // Start loading
     try {
@@ -180,14 +180,14 @@ class UserController extends GetxController {
     }
   }
 
-  Future<void> fetchSingleExercise(String category, String name) async {
+  Future<void> fetchSingleExercise(String category, String exerciseId) async {
     isLoading.value = true; // Start loading
     try {
       DocumentSnapshot snapshot = await FirebaseFirestore.instance
           .collection('Workouts')
           .doc(category) // Now fetch dynamically from the specified category
           .collection('exercises')
-          .doc(name)
+          .doc(exerciseId) // Use exerciseId to fetch
           .get();
 
       if (snapshot.exists) {
@@ -195,7 +195,7 @@ class UserController extends GetxController {
             Exercise.fromJson(snapshot.data() as Map<String, dynamic>);
         print("Fetched single exercise: ${singleExercise.value.name}");
       } else {
-        print("No exercise found for ID: $name in category: $category");
+        print("No exercise found for ID: $exerciseId in category: $category");
       }
     } catch (e) {
       print("Error fetching single exercise: $e");
@@ -204,9 +204,75 @@ class UserController extends GetxController {
     }
   }
 
-  Future<void> selectExercise(String category, String name) async {
-    await fetchSingleExercise(category, name); // Fetch the exercise details
+  Future<void> selectExercise(String category, String exerciseId) async {
+    await fetchSingleExercise(
+        category, exerciseId); // Fetch the exercise details
 
     Get.to(() => ExerciseDetail(exercise: singleExercise.value));
+  }
+
+  // Function to delete an exercise from Firestore
+  Future<void> deleteExercise(String category, String exerciseId) async {
+    isLoading.value = true; // Start loading
+    try {
+      // Query the exercise document by the exerciseId field
+      DocumentSnapshot doc = await FirebaseFirestore.instance
+          .collection('Workouts')
+          .doc(category)
+          .collection('exercises')
+          .doc(exerciseId) // Use exerciseId directly
+          .get();
+
+      if (doc.exists) {
+        await doc.reference.delete(); // Delete the document
+
+        // Remove the deleted exercise from the local list
+        exercises[category]
+            ?.removeWhere((exercise) => exercise.id == exerciseId);
+
+        print(
+            "Exercise deleted successfully: $exerciseId in category: $category");
+      } else {
+        print("No exercise found with ID: $exerciseId in category: $category");
+      }
+    } catch (e) {
+      print("Error deleting exercise: $e");
+      Get.snackbar(
+        "Error",
+        "Failed to delete the exercise. Please try again.",
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    } finally {
+      isLoading.value = false; // Stop loading
+    }
+  }
+
+  // Function to delete equipment from Firestore
+  Future<void> deleteEquipment(String equipmentId) async {
+    isLoading.value = true; // Start loading
+    try {
+      // Access the specific equipment document by its unique ID
+      DocumentReference docRef = FirebaseFirestore.instance
+          .collection('Equipments')
+          .doc(equipmentId); // Use ID instead of name
+
+      // Delete the document
+      await docRef.delete();
+
+      // Remove the deleted equipment from the local list
+      equipments.removeWhere(
+          (equipment) => equipment.id == equipmentId); // Use ID for comparison
+
+      print("Equipment deleted successfully: $equipmentId");
+    } catch (e) {
+      print("Error deleting equipment: $e");
+      Get.snackbar(
+        "Error",
+        "Failed to delete the equipment. Please try again.",
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    } finally {
+      isLoading.value = false; // Stop loading
+    }
   }
 }

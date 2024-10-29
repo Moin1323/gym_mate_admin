@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gym_mate_admin/models/equipments/equipments.dart';
+import 'package:gym_mate_admin/repository/user_repository/user_repository.dart';
 import 'package:gym_mate_admin/res/colors/app_colors.dart';
 
 class EquipmentDetail extends StatelessWidget {
@@ -100,7 +101,33 @@ class EquipmentDetail extends StatelessWidget {
                             ),
                           ),
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              // Show a confirmation dialog before deletion
+                              bool? confirmDelete = await Get.dialog<bool>(
+                                AlertDialog(
+                                  title: const Text('Delete Equipment'),
+                                  content: const Text(
+                                      'Are you sure you want to delete this equipment?'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Get.back(result: false),
+                                      child: const Text('Cancel'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () => Get.back(result: true),
+                                      child: const Text('Delete'),
+                                    ),
+                                  ],
+                                ),
+                              );
+
+                              if (confirmDelete == true) {
+                                // Call the delete function from UserController
+                                Get.find<UserController>().deleteEquipment(equipment
+                                    .name); // Replace `equipment.id` with the actual ID property
+                                Get.back(); // Go back after deletion
+                              }
+                            },
                             icon: Icon(
                               Icons.delete,
                               color: AppColors.secondary,
