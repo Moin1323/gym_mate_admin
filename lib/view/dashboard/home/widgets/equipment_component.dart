@@ -72,7 +72,7 @@ class EquipmentTab extends StatelessWidget {
         decoration: BoxDecoration(
           color:
               AppColors.secondary.withOpacity(0.25), // Changed background color
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: BorderRadius.circular(20),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,

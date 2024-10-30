@@ -82,7 +82,7 @@ class PopularTrainings extends StatelessWidget {
         padding: const EdgeInsets.all(10.0),
         decoration: BoxDecoration(
           color: AppColors.secondary.withOpacity(0.25), // Background color
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: BorderRadius.circular(20),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,

@@ -52,8 +52,8 @@ class _SettingsViewState extends State<SettingsView> {
                 decoration: BoxDecoration(
                   color: AppColors.background,
                   borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(40),
-                    topRight: Radius.circular(40),
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20),
                   ),
                   boxShadow: [
                     BoxShadow(
