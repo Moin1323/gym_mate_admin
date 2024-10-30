@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
+import 'package:gym_mate_admin/view/splash/splash_view.dart';
 
 import '../view/dashboard/home/home_view.dart';
 
@@ -35,7 +36,7 @@ class NotificationServices {
         'Please allow notifications to recive updates.',
         snackPosition: SnackPosition.BOTTOM,
       );
-      Future.delayed(Duration(seconds: 2), () {
+      Future.delayed(const Duration(seconds: 2), () {
         AppSettings.openAppSettings(type: AppSettingsType.notification);
       });
     }
@@ -58,7 +59,7 @@ class NotificationServices {
         // Check if the notification has any payload or specific data
         if (response.payload != null) {
           // Handle the payload here and navigate to HomeView or any specific view
-          Get.to(() => HomeView());
+          Get.to(() => const SplashView());
         }
       },
     );
@@ -78,7 +79,7 @@ class NotificationServices {
     // Handle when the app is opened from a notification (background/terminated state)
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       // Navigate to HomeView when the app is opened from a notification
-      Get.to(() => HomeView());
+      Get.to(() => const SplashView());
     });
   }
 
