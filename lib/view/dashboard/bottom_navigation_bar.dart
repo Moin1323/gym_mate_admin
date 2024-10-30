@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gym_mate_admin/repository/user_repository/user_repository.dart';
 import 'package:gym_mate_admin/view/dashboard/add/add_view.dart';
 import 'package:iconsax/iconsax.dart';
 
@@ -23,15 +24,27 @@ class HomeController extends GetxController {
 }
 
 class _BottomNavigationbarState extends State<BottomNavigationbar> {
-  // Instantiate HomeController
+  final UserController userController = Get.put(UserController());
   final HomeController homeController = Get.put(HomeController());
 
   // List of screens
-  final List<Widget> _screens = [
-    const HomeView(),
-    const AddView(),
-    const SettingsView()
-  ];
+  late final List<Widget> _screens;
+
+  @override
+  void initState() {
+    super.initState();
+    userController.fetchUserData();
+    userController.fetchAllUsers();
+    userController.fetchAllExercises();
+    userController.fetchAllEquipments();
+
+    // Initialize _screens here
+    _screens = [
+      HomeView(userController: userController), // Pass the instance here
+      AddView(userController: userController),
+      const SettingsView(),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +61,7 @@ class _BottomNavigationbarState extends State<BottomNavigationbar> {
               label: '',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Iconsax.search_normal),
+              icon: Icon(Iconsax.add5),
               label: '',
             ),
             BottomNavigationBarItem(
