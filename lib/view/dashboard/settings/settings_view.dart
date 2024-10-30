@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gym_mate_admin/res/colors/app_colors.dart';
 import 'package:gym_mate_admin/res/theme/theme_controller.dart';
-import 'package:gym_mate_admin/view/dashboard/home/widgets/notifications_view.dart';
 import 'package:gym_mate_admin/view_models/controller/login/login_view_model.dart';
 
 import 'widgets/AccountTile.dart'; // Ensure this file exists in your project
@@ -107,7 +106,7 @@ class _SettingsViewState extends State<SettingsView> {
                     leadingIcon: Icons.notifications,
                     trailingIcon: Icons.chevron_right,
                     destinationScreen:
-                        const notificationsView(), // Pass the ThemeController
+                        const Placeholder(), // Pass the ThemeController
                   ),
                   AccountTile(
                     accountName: 'Dark Theme',

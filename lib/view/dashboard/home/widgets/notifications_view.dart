@@ -1,100 +1,175 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:gym_mate_admin/res/colors/app_colors.dart';
+import 'package:gym_mate_admin/services/get_services.dart';
+import 'package:gym_mate_admin/services/send_notification.dart';
 
-class notificationsView extends StatefulWidget {
-  const notificationsView({super.key});
+import '../../../../res/colors/app_colors.dart';
+
+class Notifications_view extends StatefulWidget {
+  const Notifications_view({super.key});
 
   @override
-  State<notificationsView> createState() => _notificationsViewState();
+  State<Notifications_view> createState() => _Notifications_viewState();
 }
 
-class _notificationsViewState extends State<notificationsView> {
+class _Notifications_viewState extends State<Notifications_view> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
   @override
   Widget build(BuildContext context) {
+    // Define dynamic title and body
+    String notificationTitle = "Hello👋🏻";
+    String notificationBody = "Please Submit your this month fee kindly⚠️";
+
+    String notificationTitle1 = "Hello👋🏻";
+    String notificationBody1 = "Here the new offer visit Gym 🎁!";
+
     return Scaffold(
+      backgroundColor: AppColors.background,
+      appBar: AppBar(
         backgroundColor: AppColors.background,
-        appBar: AppBar(
-          backgroundColor: AppColors.background,
-          iconTheme: IconThemeData(
-            color: AppColors.secondary, // Set the leading arrow color to white
-          ),
-          title: Center(
-            child: Row(
-              children: [
-                const SizedBox(
-                  width: 30,
+        iconTheme: const IconThemeData(
+          color: Colors.white,
+        ),
+        title: Center(
+          child: Row(
+            children: [
+              const SizedBox(width: 30),
+              Text(
+                'Notifications',
+                style: TextStyle(
+                  color: AppColors.secondary,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
                 ),
-                Text(
-                  'Notifications',
+              ),
+              const SizedBox(width: 5),
+              Icon(
+                Icons.notifications,
+                color: AppColors.secondary,
+              ),
+            ],
+          ),
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            Center(
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primary,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                ),
+                onPressed: () async {
+                  GetServerKey getServerKey = GetServerKey();
+                  String accessToken = await getServerKey.getServerKeyToken();
+                  print(accessToken);
+                },
+                child: const Text(
+                  'Gen Api Token',
                   style: TextStyle(
-                    color: AppColors.secondary,
-                    fontSize: 20,
+                    color: Colors.white,
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(
-                  width: 5,
-                ),
-                Icon(
-                  Icons.notifications,
-                  color: AppColors.secondary,
-                ),
-              ],
+              ),
             ),
-          ),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              Center(
-                child: Container(
-                  width: 330,
-                  height: 100,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: Colors.white38,
-                  ),
-                  child: const Padding(
-                    padding: EdgeInsets.all(5.0),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment
-                          .start, // Aligns the content to the start
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment
-                                .start, // Aligns the text to the start
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Gym_mate 💪',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                    fontSize: 23),
-                              ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Text(
-                                'This is the test Notification ❤️‍🔥',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                    fontSize: 18),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+            const SizedBox(height: 25),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              ),
+              onPressed: () async {
+                await _sendNotification(
+                  title: notificationTitle,
+                  body: notificationBody,
+                  token:
+                      "c7tt7D-PRTOzinx-c7h3XW:APA91bFcOPYLVNsC1RGihnin8NEPp8pU_ms9smvqh8KVW57SxY-nH35bmALB4k58xf0Gw1XpYaI8hDrlgK1eDckxNuHXemnqGkKN9Z6DMxuO-LRHLeXGMeM",
+                );
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    backgroundColor: AppColors.primary,
+                    content: Center(
+                      child: Text(
+                        "Notification sent successfully!",
+                        style: TextStyle(color: AppColors.background),
+                      ),
                     ),
+                    duration: const Duration(seconds: 1),
                   ),
+                );
+              },
+              child: const Text(
+                'Send Fee Nf🔔',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
                 ),
-              )
-            ],
-          ),
-        ));
+              ),
+            ),
+            const SizedBox(height: 25),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              ),
+              onPressed: () async {
+                await _sendNotification(
+                  title: notificationTitle1,
+                  body: notificationBody1,
+                  token:
+                      "c7tt7D-PRTOzinx-c7h3XW:APA91bFcOPYLVNsC1RGihnin8NEPp8pU_ms9smvqh8KVW57SxY-nH35bmALB4k58xf0Gw1XpYaI8hDrlgK1eDckxNuHXemnqGkKN9Z6DMxuO-LRHLeXGMeM",
+                );
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    backgroundColor: AppColors.primary,
+                    content: Center(
+                      child: Text(
+                        "Notification sent successfully!",
+                        style: TextStyle(color: AppColors.background),
+                      ),
+                    ),
+                    duration: const Duration(seconds: 1),
+                  ),
+                );
+              },
+              child: const Text(
+                'Send Offer Notification🔔',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Modified method to handle notification sending only
+  Future<void> _sendNotification({
+    required String title,
+    required String body,
+    required String token,
+  }) async {
+    // Send the notification
+    await SendNotificationService.sendNotificationUsingApi(
+      token: token,
+      title: title,
+      body: body,
+      data: {"screen": "cart"},
+    );
   }
 }

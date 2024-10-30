@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gym_mate_admin/repository/user_repository/user_repository.dart';
 import 'package:gym_mate_admin/res/colors/app_colors.dart';
-import 'package:gym_mate_admin/view/dashboard/home/widgets/notifications_view.dart';
 import 'package:iconsax/iconsax.dart';
+
+import 'notifications_view.dart';
 
 class HeaderWidget extends StatelessWidget {
   final UserController userController;
@@ -48,7 +49,7 @@ class HeaderWidget extends StatelessWidget {
           const Spacer(),
           GestureDetector(
             onTap: () {
-              Get.to(const notificationsView());
+              Get.to(() => Notifications_view());
             },
             child: CircleAvatar(
               radius: 25,
