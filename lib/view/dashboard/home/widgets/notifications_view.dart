@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gym_mate_admin/services/get_services.dart';
@@ -15,12 +14,6 @@ class Notifications_view extends StatefulWidget {
 
 class _Notifications_viewState extends State<Notifications_view> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  // Function to get the current user's ID
-  Future<String?> _getCurrentUserId() async {
-    User? user = _auth.currentUser;
-    return user?.uid;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -93,11 +86,12 @@ class _Notifications_viewState extends State<Notifications_view> {
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               ),
               onPressed: () async {
-                await _sendNotificationAndSave(
-                    title: notificationTitle,
-                    body: notificationBody,
-                    token:
-                        "c7tt7D-PRTOzinx-c7h3XW:APA91bFcOPYLVNsC1RGihnin8NEPp8pU_ms9smvqh8KVW57SxY-nH35bmALB4k58xf0Gw1XpYaI8hDrlgK1eDckxNuHXemnqGkKN9Z6DMxuO-LRHLeXGMeM");
+                await _sendNotification(
+                  title: notificationTitle,
+                  body: notificationBody,
+                  token:
+                      "c7tt7D-PRTOzinx-c7h3XW:APA91bFcOPYLVNsC1RGihnin8NEPp8pU_ms9smvqh8KVW57SxY-nH35bmALB4k58xf0Gw1XpYaI8hDrlgK1eDckxNuHXemnqGkKN9Z6DMxuO-LRHLeXGMeM",
+                );
 
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
@@ -129,11 +123,12 @@ class _Notifications_viewState extends State<Notifications_view> {
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               ),
               onPressed: () async {
-                await _sendNotificationAndSave(
-                    title: notificationTitle1,
-                    body: notificationBody1,
-                    token:
-                        "c7tt7D-PRTOzinx-c7h3XW:APA91bFcOPYLVNsC1RGihnin8NEPp8pU_ms9smvqh8KVW57SxY-nH35bmALB4k58xf0Gw1XpYaI8hDrlgK1eDckxNuHXemnqGkKN9Z6DMxuO-LRHLeXGMeM");
+                await _sendNotification(
+                  title: notificationTitle1,
+                  body: notificationBody1,
+                  token:
+                      "c7tt7D-PRTOzinx-c7h3XW:APA91bFcOPYLVNsC1RGihnin8NEPp8pU_ms9smvqh8KVW57SxY-nH35bmALB4k58xf0Gw1XpYaI8hDrlgK1eDckxNuHXemnqGkKN9Z6DMxuO-LRHLeXGMeM",
+                );
 
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
@@ -163,11 +158,12 @@ class _Notifications_viewState extends State<Notifications_view> {
     );
   }
 
-  // Separate method to handle notification sending and saving
-  Future<void> _sendNotificationAndSave(
-      {required String title,
-      required String body,
-      required String token}) async {
+  // Modified method to handle notification sending only
+  Future<void> _sendNotification({
+    required String title,
+    required String body,
+    required String token,
+  }) async {
     // Send the notification
     await SendNotificationService.sendNotificationUsingApi(
       token: token,
@@ -175,21 +171,5 @@ class _Notifications_viewState extends State<Notifications_view> {
       body: body,
       data: {"screen": "cart"},
     );
-
-    // Save notification in Firestore with user ID and timestamp
-    String? userId = await _getCurrentUserId();
-    if (userId != null) {
-      await FirebaseFirestore.instance
-          .collection('notifications')
-          .doc(userId)
-          .collection('user_notifications')
-          .doc()
-          .set({
-        'title': title,
-        'body': body,
-        'userId': userId,
-        'timestamp': FieldValue.serverTimestamp(),
-      });
-    }
   }
 }
