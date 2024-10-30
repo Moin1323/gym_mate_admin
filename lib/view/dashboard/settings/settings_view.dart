@@ -85,23 +85,23 @@ class _SettingsViewState extends State<SettingsView> {
                         padding: const EdgeInsets.all(16.0),
                         children: [
                           // Account tiles section
-                          AccountTile(
+                          const AccountTile(
                             accountName: 'Edit Profile',
                             leadingIcon: Icons.account_circle,
                             trailingIcon: Icons.chevron_right,
-                            destinationScreen: const Placeholder(),
+                            destinationScreen: Placeholder(),
                           ),
-                          AccountTile(
+                          const AccountTile(
                             accountName: 'Password Change',
                             leadingIcon: Icons.lock_clock,
                             trailingIcon: Icons.chevron_right,
-                            destinationScreen: const Placeholder(),
+                            destinationScreen: Placeholder(),
                           ),
-                          AccountTile(
+                          const AccountTile(
                             accountName: 'Notifications',
                             leadingIcon: Icons.notifications,
                             trailingIcon: Icons.chevron_right,
-                            destinationScreen: const notificationsView(),
+                            destinationScreen: Notifications_view(),
                           ),
                           AccountTile(
                             accountName: 'Log out',
