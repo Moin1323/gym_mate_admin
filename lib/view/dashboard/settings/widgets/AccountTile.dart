@@ -1,8 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gym_mate_admin/res/colors/app_colors.dart';
-import 'package:gym_mate_admin/res/theme/theme_controller.dart';
 
 class AccountTile extends StatelessWidget {
   final String accountName;
@@ -10,11 +8,9 @@ class AccountTile extends StatelessWidget {
   final IconData? trailingIcon;
   final bool showSwitch;
   final Widget? destinationScreen;
-  final ThemeController themeController =
-      Get.put(ThemeController()); // Ensures themeController is available
   final VoidCallback? onPressed;
 
-  AccountTile({
+  const AccountTile({
     super.key,
     required this.accountName,
     required this.leadingIcon,
@@ -38,12 +34,12 @@ class AccountTile extends StatelessWidget {
           title: Text(
             accountName,
             style: TextStyle(
-              color: AppColors.secondary,
               fontSize: 18,
-              fontWeight: FontWeight.w900,
+              fontWeight: FontWeight.w400,
+              color: AppColors.secondary,
             ),
           ),
-          trailing: showSwitch ? _buildSwitch() : _buildTrailingIcon(),
+          trailing: _buildTrailingIcon(),
           onTap: onPressed ??
               () {
                 if (destinationScreen != null) {
@@ -85,17 +81,5 @@ class AccountTile extends StatelessWidget {
             color: AppColors.secondary,
           )
         : const SizedBox.shrink();
-  }
-
-  Widget _buildSwitch() {
-    return Obx(() {
-      return CupertinoSwitch(
-        value: themeController.themeMode.value == ThemeMode.dark,
-        activeColor: AppColors.primary,
-        onChanged: (value) {
-          themeController.toggleTheme();
-        },
-      );
-    });
   }
 }
