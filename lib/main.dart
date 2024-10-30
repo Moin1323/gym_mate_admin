@@ -4,9 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gym_mate_admin/res/getx_localization/languages.dart';
 import 'package:gym_mate_admin/res/routes/app_routes.dart';
-import 'package:gym_mate_admin/res/theme/theme_controller.dart';
+import 'package:gym_mate_admin/res/theme/app_theme.dart';
 import 'package:gym_mate_admin/view/splash/splash_view.dart';
-
 import 'firebase_options.dart';
 
 void main() async {
@@ -15,8 +14,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  // Initialize the ThemeController
-  Get.put(ThemeController());
+  AppThemes.setStatusBarStyle(); // Set the status bar style
 
   runApp(const MyApp());
 }
@@ -24,7 +22,7 @@ void main() async {
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
-  print(message.notification!.title.toString());
+  print(message.notification?.title ?? "No Title");
 }
 
 class MyApp extends StatelessWidget {
@@ -33,22 +31,15 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    // Access the ThemeController
-    final ThemeController themeController = Get.find();
-
-    return Obx(
-      () => GetMaterialApp(
-        title: 'Flutter Demo',
-        translations: Languages(),
-        locale: const Locale('en', 'US'),
-        fallbackLocale: const Locale('en', 'US'),
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData.light(), // Define your light theme
-        darkTheme: ThemeData.dark(), // Define your dark theme
-        themeMode: themeController.themeMode.value, // Set theme mode
-        home: SplashView(),
-        getPages: AppRoutes.appRoutes(),
-      ),
+    return GetMaterialApp(
+      title: 'Flutter Demo',
+      translations: Languages(),
+      locale: const Locale('en', 'US'),
+      fallbackLocale: const Locale('en', 'US'),
+      debugShowCheckedModeBanner: false,
+      theme: AppThemes.darkTheme, // Set the theme directly
+      home: const SplashView(),
+      getPages: AppRoutes.appRoutes(),
     );
   }
 }

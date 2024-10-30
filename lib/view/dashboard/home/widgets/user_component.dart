@@ -69,7 +69,7 @@ class UserDetailsTab extends StatelessWidget {
         padding: const EdgeInsets.all(10.0),
         decoration: BoxDecoration(
           color: AppColors.secondary.withOpacity(0.25), // Background color
-          borderRadius: BorderRadius.circular(15), // Border radius for the card
+          borderRadius: BorderRadius.circular(20), // Border radius for the card
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
