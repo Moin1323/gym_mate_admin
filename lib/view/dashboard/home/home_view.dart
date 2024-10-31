@@ -2,6 +2,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gym_mate_admin/repository/user_repository/user_repository.dart';
+import 'package:gym_mate_admin/res/theme/app_theme.dart';
 import 'package:gym_mate_admin/view/dashboard/home/widgets/banner_widget.dart';
 import 'package:gym_mate_admin/view/dashboard/home/widgets/header_widget.dart';
 import 'package:gym_mate_admin/view/dashboard/home/widgets/tab_bar_view_widget.dart';
@@ -32,6 +33,7 @@ class _HomeViewState extends State<HomeView> {
         context, const RemoteMessage()); // Initialize local notifications
     notificationServices.firebaseInit();
     notificationServices.getDeviceToken();
+    AppThemes.setStatusBarStyle(); // Set the status bar style
   }
 
   @override

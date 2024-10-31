@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gym_mate_admin/view/dashboard/add/widgets/search_filter.dart';
+import 'package:gym_mate_admin/view/dashboard/add/widgets/search/search_filter.dart';
 import 'package:iconsax/iconsax.dart';
 
-import '../../../../res/colors/app_colors.dart';
+import '../../../../../res/colors/app_colors.dart';
 
 class Search_Conatiner extends StatefulWidget {
   const Search_Conatiner({super.key});

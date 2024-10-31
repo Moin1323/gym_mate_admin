@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gym_mate_admin/repository/user_repository/user_repository.dart';
 import 'package:gym_mate_admin/res/colors/app_colors.dart';
+import 'package:gym_mate_admin/res/theme/app_theme.dart';
 import 'package:gym_mate_admin/view/dashboard/add/widgets/equipments_row_widget.dart';
 import 'package:gym_mate_admin/view/dashboard/add/widgets/exercises_row_widget.dart';
-import 'package:gym_mate_admin/view/dashboard/add/widgets/search_container.dart';
+import 'package:gym_mate_admin/view/dashboard/add/widgets/search/search_container.dart';
 import 'package:gym_mate_admin/view/dashboard/add/widgets/users_row_widget.dart';
 
 class AddView extends StatefulWidget {
@@ -27,6 +28,8 @@ class _AddViewState extends State<AddView> {
     userController.fetchAllUsers();
     userController.fetchAllExercises();
     userController.fetchAllEquipments();
+
+    AppThemes.setStatusBarStyle(); // Set the status bar style
   }
 
   @override

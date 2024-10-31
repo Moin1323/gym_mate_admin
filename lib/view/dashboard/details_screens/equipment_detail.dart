@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:gym_mate_admin/models/equipments/equipments.dart';
 import 'package:gym_mate_admin/repository/user_repository/user_repository.dart';
 import 'package:gym_mate_admin/res/colors/app_colors.dart';
+import 'package:gym_mate_admin/res/theme/app_theme.dart';
 
 class EquipmentDetail extends StatelessWidget {
   final Equipment equipment;
@@ -11,6 +12,7 @@ class EquipmentDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AppThemes.setStatusBarStyle();
     return Scaffold(
       backgroundColor: AppColors.background,
       body: Stack(
@@ -130,7 +132,7 @@ class EquipmentDetail extends StatelessWidget {
                             },
                             icon: Icon(
                               Icons.delete,
-                              color: AppColors.secondary,
+                              color: AppColors.primary,
                             ),
                           ),
                         ],
@@ -156,7 +158,7 @@ class EquipmentDetail extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.background,
         borderRadius: BorderRadius.circular(15),
-        border: Border.all(color: AppColors.secondary),
+        border: Border.all(color: AppColors.primary),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -179,7 +181,7 @@ class EquipmentDetail extends StatelessWidget {
   Widget _infoRow(IconData icon, String text) {
     return Row(
       children: [
-        Icon(icon, color: AppColors.primary),
+        Icon(icon, color: AppColors.secondary),
         const SizedBox(width: 10),
         Expanded(
           child: Text(

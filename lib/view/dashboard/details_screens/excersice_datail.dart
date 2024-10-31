@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:gym_mate_admin/models/exercise/exercise.dart';
 import 'package:gym_mate_admin/repository/user_repository/user_repository.dart';
 import 'package:gym_mate_admin/res/colors/app_colors.dart';
+import 'package:gym_mate_admin/res/theme/app_theme.dart';
 
 class ExerciseDetail extends StatelessWidget {
   final Exercise exercise;
@@ -11,6 +12,8 @@ class ExerciseDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AppThemes.setStatusBarStyle();
+
     final UserController userController =
         Get.find(); // Get the instance of UserController
 
@@ -131,7 +134,7 @@ class ExerciseDetail extends StatelessWidget {
                             },
                             icon: Icon(
                               Icons.delete,
-                              color: AppColors.secondary,
+                              color: AppColors.primary,
                             ),
                           ),
                         ],
@@ -157,7 +160,7 @@ class ExerciseDetail extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.background,
         borderRadius: BorderRadius.circular(15),
-        border: Border.all(color: AppColors.secondary),
+        border: Border.all(color: AppColors.primary),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
