@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gym_mate_admin/models/equipments/equipments.dart';
 import 'package:gym_mate_admin/res/colors/app_colors.dart';
+import 'package:gym_mate_admin/res/components/lists/equipments_list.dart';
 import 'package:gym_mate_admin/view/dashboard/details_screens/equipment_detail.dart';
 
 class EquipmentsRowWidget extends StatelessWidget {
@@ -30,6 +31,7 @@ class EquipmentsRowWidget extends StatelessWidget {
             TextButton(
               onPressed: () {
                 // Add edit functionality here
+                Get.to(() => EquipmentsList(equipments: equipments));
               },
               child: Text(
                 "Edit",

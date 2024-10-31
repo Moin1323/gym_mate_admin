@@ -6,7 +6,7 @@ import 'package:gym_mate_admin/models/exercise/exercise.dart';
 import 'package:gym_mate_admin/models/exercise/instruction.dart';
 import 'package:gym_mate_admin/models/login/user_model.dart';
 import 'package:gym_mate_admin/res/colors/app_colors.dart';
-import 'package:gym_mate_admin/view/dashboard/add/widgets/search_textfeild.dart'
+import 'package:gym_mate_admin/view/dashboard/add/widgets/search/search_textfeild.dart'
     as custom;
 import 'package:gym_mate_admin/view/dashboard/details_screens/excersice_datail.dart';
 import 'package:gym_mate_admin/view/dashboard/details_screens/equipment_detail.dart';

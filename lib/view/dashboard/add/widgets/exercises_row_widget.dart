@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:gym_mate_admin/models/exercise/exercise.dart';
 import 'package:gym_mate_admin/repository/user_repository/user_repository.dart';
 import 'package:gym_mate_admin/res/colors/app_colors.dart';
+import 'package:gym_mate_admin/res/components/lists/exercises_list.dart';
 import 'package:gym_mate_admin/view/dashboard/details_screens/excersice_datail.dart';
 
 class ExercisesRowWidget extends StatefulWidget {
@@ -47,6 +48,9 @@ class _ExercisesRowWidgetState extends State<ExercisesRowWidget> {
             TextButton(
               onPressed: () {
                 // Add edit functionality here
+
+                Get.to(
+                    () => ExercisesList(userController: widget.userController));
               },
               child: Text("Edit",
                   style: TextStyle(fontSize: 14, color: AppColors.primary)),

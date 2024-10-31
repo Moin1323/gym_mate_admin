@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
-import '../../../../res/colors/app_colors.dart';
+import '../../../../../res/colors/app_colors.dart';
 
 // Define the SearchController here
 class SearchController extends GetxController {

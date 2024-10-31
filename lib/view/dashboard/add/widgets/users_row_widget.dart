@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import 'package:get/get.dart';
 import 'package:gym_mate_admin/repository/user_repository/user_repository.dart';
 import 'package:gym_mate_admin/res/colors/app_colors.dart';
+import 'package:gym_mate_admin/res/components/lists/users_list.dart';
 
 class UsersRowWidget extends StatefulWidget {
   final UserController userController;
@@ -31,6 +32,7 @@ class _UsersRowWidgetState extends State<UsersRowWidget> {
             TextButton(
               onPressed: () {
                 // Add edit functionality here
+                Get.to(() => UsersList(userController: widget.userController));
               },
               child: Text(
                 "Edit",

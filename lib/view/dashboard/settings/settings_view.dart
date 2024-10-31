@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gym_mate_admin/res/assets/image_assets.dart';
 import 'package:gym_mate_admin/res/colors/app_colors.dart';
+import 'package:gym_mate_admin/res/theme/app_theme.dart';
+import 'package:gym_mate_admin/view/auth/forgetPassword/forget_password_view.dart';
+import 'package:gym_mate_admin/view/auth/profile_/ProfileEditView.dart';
 import 'package:gym_mate_admin/view/dashboard/home/widgets/notifications_view.dart';
 import 'package:gym_mate_admin/view_models/controller/login/login_view_model.dart';
 
@@ -16,6 +19,12 @@ class SettingsView extends StatefulWidget {
 
 class _SettingsViewState extends State<SettingsView> {
   final LoginViewModel loginVM = Get.put(LoginViewModel());
+
+  @override
+  void initState() {
+    super.initState();
+    AppThemes.setStatusBarStyle(); // Set the status bar style
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,8 +61,8 @@ class _SettingsViewState extends State<SettingsView> {
                 decoration: BoxDecoration(
                   color: AppColors.background,
                   borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20),
+                    topLeft: Radius.circular(40),
+                    topRight: Radius.circular(40),
                   ),
                   boxShadow: [
                     BoxShadow(
@@ -85,17 +94,17 @@ class _SettingsViewState extends State<SettingsView> {
                         padding: const EdgeInsets.all(16.0),
                         children: [
                           // Account tiles section
-                          const AccountTile(
+                          AccountTile(
                             accountName: 'Edit Profile',
                             leadingIcon: Icons.account_circle,
                             trailingIcon: Icons.chevron_right,
-                            destinationScreen: Placeholder(),
+                            destinationScreen: ProfileEditView(),
                           ),
-                          const AccountTile(
+                          AccountTile(
                             accountName: 'Password Change',
                             leadingIcon: Icons.lock_clock,
                             trailingIcon: Icons.chevron_right,
-                            destinationScreen: Placeholder(),
+                            destinationScreen: ForgotPasswordView(),
                           ),
                           const AccountTile(
                             accountName: 'Notifications',
